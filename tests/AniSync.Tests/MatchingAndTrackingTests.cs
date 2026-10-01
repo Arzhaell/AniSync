@@ -118,6 +118,24 @@ public class WatchTrackerTests
     }
 
     [Fact]
+    public void Episode_validated_by_hand_is_not_counted_again()
+    {
+        var tracker = new WatchTracker();
+        var settings = new AppSettings { MinWatchMinutes = 20 };
+        var now = new DateTime(2026, 9, 29, 20, 0, 0);
+        var playing = Candidate("Frieren - Episode 3", playing: true, TimeSpan.FromMinutes(24));
+
+        Assert.Empty(Run(tracker, settings, playing, 300, ref now));      // 5 min de lecture
+        var key = tracker.Tick([playing], settings, now).Current!.Parsed.EpisodeKey;
+
+        Assert.True(tracker.MarkCompleted(key));
+        Assert.False(tracker.MarkCompleted(key));                         // déjà validé
+        Assert.True(tracker.Tick([playing], settings, now).Current!.Completed);
+        Assert.Empty(Run(tracker, settings, playing, 1200, ref now));     // les 20 min passent : pas de deuxième fois
+        Assert.False(tracker.MarkCompleted("inconnu"));
+    }
+
+    [Fact]
     public void Short_episodes_need_85_percent_of_their_duration()
     {
         var tracker = new WatchTracker();

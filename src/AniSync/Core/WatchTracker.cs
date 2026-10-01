@@ -54,6 +54,17 @@ public sealed class WatchTracker
         foreach (var e in _episodes.Values) e.IsPlaying = false;
     }
 
+    /// <summary>
+    /// L'utilisateur valide l'épisode lui-même, sans attendre le temps minimum : il est vu,
+    /// et ne sera pas compté une deuxième fois en atteignant le seuil. Faux s'il l'était déjà.
+    /// </summary>
+    public bool MarkCompleted(string episodeKey)
+    {
+        if (!_episodes.TryGetValue(episodeKey, out var ep) || ep.Completed) return false;
+        ep.Completed = true;
+        return true;
+    }
+
     public (EpisodeSnapshot? Current, List<EpisodeSnapshot> Completed) Tick(
         IReadOnlyList<PlaybackCandidate> candidates, AppSettings settings, DateTime now)
     {

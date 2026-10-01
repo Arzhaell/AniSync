@@ -20,6 +20,9 @@ public static class Tr
     public static string ThisOneTip => L.T("Associer ce titre à cet anime (retenu pour les prochains épisodes)", "Link this title to this anime (remembered for next episodes)");
     public static string Fix => L.T("Corriger", "Fix");
     public static string FixCurrentTip => L.T("Ce n'est pas le bon anime ? Choisis le bon", "Wrong anime? Pick the right one");
+    public static string Validate => L.T("Valider l'épisode", "Mark as watched");
+    public static string ValidateTip => L.T("Compter cet épisode comme vu tout de suite, sans attendre le temps minimum",
+        "Count this episode as watched right away, without waiting for the minimum time");
     public static string IgnoreTitle => L.T("Ignorer ce titre", "Ignore this title");
     public static string IgnoreTitleTip => L.T("Ne plus jamais suivre ce titre", "Never track this title again");
     public static string History => L.T("Historique", "History");

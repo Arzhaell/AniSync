@@ -48,6 +48,8 @@ public partial class MainWindow : Window
 
     void CurrentTitle_Click(object sender, RoutedEventArgs e) => Links.Open(_controller.CurrentSiteUrl);
 
+    void ValidateCurrent_Click(object sender, RoutedEventArgs e) => _controller.ValidateCurrent();
+
     void FixCurrent_Click(object sender, RoutedEventArgs e)
     {
         var parsed = _controller.CurrentParsed;

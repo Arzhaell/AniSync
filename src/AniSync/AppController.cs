@@ -405,6 +405,24 @@ public sealed class AppController : IDisposable
         ReloadCurrentInfo();
     }
 
+    /// <summary>
+    /// L'utilisateur valide l'épisode en cours à la main, sans attendre le temps minimum :
+    /// la liste est mise à jour comme à la fin d'un épisode (avec « Annuler » dans l'historique).
+    /// </summary>
+    public void ValidateCurrent()
+    {
+        var cur = _current;
+        if (cur is null || cur.Completed) return;
+        bool marked;
+        lock (_trackerLock) marked = _tracker.MarkCompleted(cur.Parsed.EpisodeKey);
+        if (!marked) return;
+
+        Log.Info($"Épisode validé à la main : {cur.Parsed} ({cur.SourceName}, {cur.WatchedSeconds / 60:0.0} min regardées)");
+        _current = cur with { Completed = true };
+        RefreshCurrentPanel();
+        _ = _sync.ProcessAsync(cur.Parsed);
+    }
+
     public void IgnoreCurrent()
     {
         var cur = _current;
