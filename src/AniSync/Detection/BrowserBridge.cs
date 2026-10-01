@@ -194,7 +194,7 @@ public static class ExtensionCandidates
         }
         if (report.Title is { Length: > 0 } title) titles.Add(new TitleOption(title, ParseMode.Normal));
 
-        var site = string.IsNullOrWhiteSpace(report.Host) ? "Navigateur" : report.Host;
+        var site = string.IsNullOrWhiteSpace(report.Host) ? L.T("Navigateur", "Browser") : report.Host;
         var source = string.IsNullOrWhiteSpace(report.Browser) ? site : $"{site} · {report.Browser}";
         return new PlaybackCandidate(
             $"ext|{report.Browser}|{report.TabId}",

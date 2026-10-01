@@ -225,7 +225,7 @@ public static class KnownApps
         ["vivaldi"] = "Vivaldi", ["firefox"] = "Firefox", ["vlc"] = "VLC", ["mpc-hc"] = "MPC-HC", ["mpc-hc64"] = "MPC-HC",
         ["mpc-be"] = "MPC-BE", ["mpc-be64"] = "MPC-BE", ["mpv"] = "mpv", ["mpvnet"] = "mpv.net", ["PotPlayer"] = "PotPlayer",
         ["PotPlayer64"] = "PotPlayer", ["PotPlayerMini"] = "PotPlayer", ["PotPlayerMini64"] = "PotPlayer", ["stremio"] = "Stremio",
-        ["Microsoft.Media.Player"] = "Lecteur multimédia", ["Video.UI"] = "Films et TV", ["wmplayer"] = "Windows Media Player",
+        ["Microsoft.Media.Player"] = L.T("Lecteur multimédia", "Media Player"), ["Video.UI"] = L.T("Films et TV", "Movies & TV"), ["wmplayer"] = "Windows Media Player",
     };
 
     public static bool IsBrowser(string process) => Browsers.Contains(process);

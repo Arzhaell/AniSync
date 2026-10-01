@@ -12,7 +12,7 @@
 
     <BootstrapperApplication>
       <bal:WixStandardBootstrapperApplication Theme="rtfLicense"
-                                              LicenseFile="..\License.rtf"
+                                              LicenseFile="..\License.en.rtf"
                                               ThemeFile="Theme\AniSyncTheme.xml"
                                               LocalizationFile="Theme\AniSyncTheme.wxl"
                                               SuppressOptionsUI="yes"
@@ -20,13 +20,29 @@
                                               ShowVersion="yes" />
       <Payload SourceFile="Theme\sidebar.png" Name="sidebar.png" />
       <Payload SourceFile="..\..\src\AniSync\Assets\AniSync.ico" Name="AniSync.ico" />
+
+      <!-- Textes en anglais par défaut ; en français quand Windows est en français (France, Belgique, Canada, Suisse, Luxembourg, Monaco). -->
+      <Payload Id="ThemeFr1036" SourceFile="Theme\AniSyncTheme.fr.wxl" Name="1036\thm.wxl" />
+      <Payload Id="ThemeFr2060" SourceFile="Theme\AniSyncTheme.fr.wxl" Name="2060\thm.wxl" />
+      <Payload Id="ThemeFr3084" SourceFile="Theme\AniSyncTheme.fr.wxl" Name="3084\thm.wxl" />
+      <Payload Id="ThemeFr4108" SourceFile="Theme\AniSyncTheme.fr.wxl" Name="4108\thm.wxl" />
+      <Payload Id="ThemeFr5132" SourceFile="Theme\AniSyncTheme.fr.wxl" Name="5132\thm.wxl" />
+      <Payload Id="ThemeFr6156" SourceFile="Theme\AniSyncTheme.fr.wxl" Name="6156\thm.wxl" />
     </BootstrapperApplication>
 
     <!-- Bouton « Lancer AniSync » sur l'écran final -->
     <Variable Name="LaunchTarget" Value="[LocalAppDataFolder]Programs\AniSync\AniSync.exe" />
 
+    <!-- Le .msi embarqué est l'anglais : son commentaire dans « Applications installées » passe en français si besoin. -->
+    <Variable Name="ArpComments" Value="Updates your AniList or MyAnimeList list automatically when you finish an episode." />
+    <SetVariable Id="ArpCommentsFr" Variable="ArpComments"
+                 Value="Met à jour ta liste AniList ou MyAnimeList automatiquement quand tu termines un épisode."
+                 Condition="UserUILanguageID = 1036 OR UserUILanguageID = 2060 OR UserUILanguageID = 3084 OR UserUILanguageID = 4108 OR UserUILanguageID = 5132 OR UserUILanguageID = 6156" />
+
     <Chain>
-      <MsiPackage Id="AniSyncMsi" SourceFile="$(MsiPath)" Compressed="yes" Visible="no" />
+      <MsiPackage Id="AniSyncMsi" SourceFile="$(MsiPath)" Compressed="yes" Visible="no">
+        <MsiProperty Name="ARPCOMMENTS" Value="[ArpComments]" />
+      </MsiPackage>
     </Chain>
   </Bundle>
 </Wix>

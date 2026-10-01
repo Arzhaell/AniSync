@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -11,10 +11,10 @@
     <RootNamespace>AniSync</RootNamespace>
     <AssemblyName>AniSync</AssemblyName>
     <ApplicationIcon>Assets\AniSync.ico</ApplicationIcon>
-    <Version>1.6.0</Version>
+    <Version>1.7.0</Version>
     <Product>AniSync</Product>
-    <AssemblyTitle>AniSync - synchro AniList et MyAnimeList</AssemblyTitle>
-    <Description>Repère l'anime que tu regardes sur ton PC et met ta liste AniList ou MyAnimeList à jour quand tu as fini un épisode.</Description>
+    <AssemblyTitle>AniSync - AniList &amp; MyAnimeList sync</AssemblyTitle>
+    <Description>Spots the anime you watch on your PC and updates your AniList or MyAnimeList list when you finish an episode.</Description>
   </PropertyGroup>
 
   <ItemGroup>

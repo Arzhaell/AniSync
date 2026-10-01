@@ -7,18 +7,18 @@
            Version="$(ProductVersion)"
            UpgradeCode="177D1D5C-8CC9-4E00-94A3-78A84C2D0606"
            Scope="perUser"
-           Language="1036"
+           Language="!(loc.PackageLanguage)"
            Codepage="1252"
            Compressed="yes">
 
     <MajorUpgrade AllowSameVersionUpgrades="yes"
-                  DowngradeErrorMessage="Une version plus récente d'AniSync est déjà installée." />
+                  DowngradeErrorMessage="!(loc.DowngradeError)" />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
     <Icon Id="AniSyncIcon" SourceFile="..\src\AniSync\Assets\AniSync.ico" />
     <Property Id="ARPPRODUCTICON" Value="AniSyncIcon" />
     <Property Id="ARPNOREPAIR" Value="1" />
-    <Property Id="ARPCOMMENTS" Value="Met à jour ta liste AniList ou MyAnimeList automatiquement quand tu termines un épisode." />
+    <Property Id="ARPCOMMENTS" Value="!(loc.ArpComments)" />
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsFolder" Name="Programs">
@@ -37,7 +37,7 @@
 
     <StandardDirectory Id="ProgramMenuFolder">
       <Component Id="StartMenuShortcut" Guid="C13BC1F4-BE5B-4810-9BC5-92B7929D19B9">
-        <Shortcut Id="StartMenuShortcut" Name="AniSync" Description="Synchro automatique AniList"
+        <Shortcut Id="StartMenuShortcut" Name="AniSync" Description="!(loc.ShortcutDescription)"
                   Target="[#AniSyncExe]" WorkingDirectory="INSTALLFOLDER" />
         <RegistryValue Root="HKCU" Key="Software\AniSync" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
       </Component>
@@ -45,7 +45,7 @@
 
     <StandardDirectory Id="DesktopFolder">
       <Component Id="DesktopShortcut" Guid="5BDA2AFE-10FC-42FA-9B41-9BB4542A5503">
-        <Shortcut Id="DesktopShortcut" Name="AniSync" Description="Synchro automatique AniList"
+        <Shortcut Id="DesktopShortcut" Name="AniSync" Description="!(loc.ShortcutDescription)"
                   Target="[#AniSyncExe]" WorkingDirectory="INSTALLFOLDER" />
         <RegistryValue Root="HKCU" Key="Software\AniSync" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
       </Component>
@@ -83,10 +83,10 @@
     </InstallExecuteSequence>
 
     <!-- Interface : un écran d'accueil + « Lancer AniSync » coché à la fin -->
-    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUILicenseRtf" Value="!(loc.LicenseRtf)" />
     <WixVariable Id="WixUIDialogBmp" Value="Assets\Dialog.bmp" />
     <WixVariable Id="WixUIBannerBmp" Value="Assets\Banner.bmp" />
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Lancer AniSync" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
     <UI>
       <ui:WixUI Id="WixUI_Minimal" />

@@ -1,0 +1,14 @@
+{
+  "extDescription": { "message": "Indique à l'appli AniSync (sur ce PC) l'anime et l'épisode que tu regardes dans le navigateur, pour mettre ta liste AniList ou MyAnimeList à jour." },
+  "checking": { "message": "Vérification…" },
+  "inThisTab": { "message": "Dans cet onglet" },
+  "connectedListening": { "message": "Connecté à AniSync · écoute activée" },
+  "connectedNotListening": { "message": "Connecté à AniSync · écoute désactivée" },
+  "appNotRunning": { "message": "AniSync n'est pas lancé sur ce PC" },
+  "noVideo": { "message": "Aucune vidéo en cours" },
+  "videoDetected": { "message": "Vidéo détectée" },
+  "season": { "message": "Saison $N$ · ", "placeholders": { "n": { "content": "$1" } } },
+  "episode": { "message": "Épisode $N$", "placeholders": { "n": { "content": "$1" } } },
+  "paused": { "message": "En pause" },
+  "playing": { "message": "En lecture" }
+}

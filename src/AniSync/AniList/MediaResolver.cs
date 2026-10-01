@@ -145,7 +145,7 @@ public sealed class MediaResolver(AniListClient client, AppSettings settings, Wi
         }
 
         if (media.Episodes is int total && episode > total)
-            return new Resolution(media, episode, $"Épisode {p.Episode} alors que « {media.Title} » n'en a que {total}");
+            return new Resolution(media, episode, L.T($"Épisode {p.Episode} alors que «\u00A0{media.Title}\u00A0» n'en a que {total}", $"Episode {p.Episode} but \"{media.Title}\" only has {total}"));
 
         return new Resolution(media, episode);
     }

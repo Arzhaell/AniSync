@@ -39,7 +39,7 @@ public sealed class AniListClient
     public async Task<Viewer> GetViewerAsync(CancellationToken ct = default)
     {
         var data = await QueryAsync(ViewerQuery, null, ct);
-        var v = data["Viewer"] ?? throw new AniListAuthException("Compte AniList introuvable");
+        var v = data["Viewer"] ?? throw new AniListAuthException(L.T("Compte AniList introuvable", "AniList account not found"));
         return new Viewer(Int(v["id"]) ?? 0, Str(v["name"]) ?? "?", Str(v["avatar"]?["medium"]), Str(v["siteUrl"]));
     }
 
@@ -73,7 +73,7 @@ public sealed class AniListClient
     public async Task<AniMedia> GetMediaAsync(int id, CancellationToken ct = default)
     {
         var data = await QueryAsync(MediaQuery, new Dictionary<string, object?> { ["id"] = id }, ct);
-        return ParseMedia(data["Media"] ?? throw new AniListException($"Anime {id} introuvable"));
+        return ParseMedia(data["Media"] ?? throw new AniListException(L.T($"Anime {id} introuvable", $"Anime {id} not found")));
     }
 
     public async Task<ListEntry> SaveEntryAsync(int mediaId, SyncDecision decision, CancellationToken ct = default)
@@ -116,7 +116,7 @@ public sealed class AniListClient
         var call = string.Join(", ", args.Select(a => $"{a.Key}: ${a.Key}"));
         var query = $"mutation ({defs}) {{ SaveMediaListEntry({call}) {{ id status progress repeat }} }}";
         var data = await QueryAsync(query, args.ToDictionary(a => a.Key, a => a.Value.Value), ct);
-        var e = data["SaveMediaListEntry"] ?? throw new AniListException("Réponse AniList vide");
+        var e = data["SaveMediaListEntry"] ?? throw new AniListException(L.T("Réponse AniList vide", "Empty response from AniList"));
         return new ListEntry(Int(e["id"]) ?? 0, Str(e["status"]) ?? "", Int(e["progress"]) ?? 0, Int(e["repeat"]) ?? 0, null, null);
     }
 
@@ -150,15 +150,15 @@ public sealed class AniListClient
 
             if (response.StatusCode == HttpStatusCode.Unauthorized ||
                 (message?.Contains("invalid token", StringComparison.OrdinalIgnoreCase) ?? false))
-                throw new AniListAuthException(message ?? "Jeton AniList invalide");
+                throw new AniListAuthException(message ?? L.T("Jeton AniList invalide", "Invalid AniList token"));
 
             if ((int)response.StatusCode >= 500)
-                throw new HttpRequestException($"AniList indisponible ({(int)response.StatusCode})");
+                throw new HttpRequestException(L.T($"AniList indisponible ({(int)response.StatusCode})", $"AniList unavailable ({(int)response.StatusCode})"));
 
             if (message is not null) throw new AniListException(message);
-            if (!response.IsSuccessStatusCode) throw new AniListException($"Erreur AniList HTTP {(int)response.StatusCode}");
+            if (!response.IsSuccessStatusCode) throw new AniListException(L.T($"Erreur AniList HTTP {(int)response.StatusCode}", $"AniList HTTP error {(int)response.StatusCode}"));
 
-            return root?["data"] ?? throw new AniListException("Réponse AniList vide");
+            return root?["data"] ?? throw new AniListException(L.T("Réponse AniList vide", "Empty response from AniList"));
         }
     }
 

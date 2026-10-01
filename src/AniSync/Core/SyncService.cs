@@ -29,7 +29,7 @@ public sealed class SyncService(Func<IListService> activeService, Func<HistoryIt
             if (!service.IsAuthenticated)
             {
                 AddPending(p);
-                Emit(HistoryItem.Pending(p, $"en attente de connexion à {service.Name}"));
+                Emit(HistoryItem.Pending(p, L.T($"en attente de connexion à {service.Name}", $"waiting for a {service.Name} connection")));
                 return;
             }
 
@@ -51,7 +51,7 @@ public sealed class SyncService(Func<IListService> activeService, Func<HistoryIt
             var state = await service.GetStateAsync(media);
             if (state is null)
             {
-                Emit(HistoryItem.Error(p, $"« {media.Title} » n'existe pas sur {service.Name}"));
+                Emit(HistoryItem.Error(p, L.T($"«\u00A0{media.Title}\u00A0» n'existe pas sur {service.Name}", $"\"{media.Title}\" doesn't exist on {service.Name}")));
                 return;
             }
 
@@ -73,12 +73,12 @@ public sealed class SyncService(Func<IListService> activeService, Func<HistoryIt
             Log.Error($"Connexion {service.Name} refusée", ex);
             AddPending(p);
             AuthExpired?.Invoke();
-            Emit(HistoryItem.Pending(p, $"session {service.Name} expirée, reconnecte-toi"));
+            Emit(HistoryItem.Pending(p, L.T($"session {service.Name} expirée, reconnecte-toi", $"{service.Name} session expired, sign in again")));
         }
         catch (Exception ex) when (IsTransient(ex) && attempt < MaxRetries)
         {
             Log.Error($"{service.Name} injoignable (essai {attempt + 1}) pour {p}", ex);
-            if (attempt == 0) Emit(HistoryItem.Error(p, $"{service.Name} injoignable, nouvel essai automatique…"));
+            if (attempt == 0) Emit(HistoryItem.Error(p, L.T($"{service.Name} injoignable, nouvel essai automatique…", $"{service.Name} unreachable, retrying automatically…")));
             retry = true;
         }
         catch (Exception ex)
@@ -114,9 +114,9 @@ public sealed class SyncService(Func<IListService> activeService, Func<HistoryIt
     public async Task UndoAsync(HistoryItem item)
     {
         var service = serviceForItem(item)
-            ?? throw new AniListException("Le compte mis à jour a été retiré d'AniSync : annulation impossible.");
+            ?? throw new AniListException(L.T("Le compte mis à jour a été retiré d'AniSync : annulation impossible.", "The updated account was removed from AniSync: can't undo."));
         if (!service.IsAuthenticated)
-            throw new AniListException($"Reconnecte le compte {service.Profile.Label} pour annuler cette mise à jour.");
+            throw new AniListException(L.T($"Reconnecte le compte {service.Profile.Label} pour annuler cette mise à jour.", $"Reconnect {service.Profile.Label} to undo this update."));
 
         await service.UndoAsync(item);
         if (item.MediaId is int id) resolver.InvalidateMedia(id);

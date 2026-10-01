@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textes français du .msi -->
+<WixLocalization Culture="fr-FR" Codepage="1252" xmlns="http://wixtoolset.org/schemas/v4/wxl">
+  <String Id="PackageLanguage" Value="1036" />
+  <String Id="DowngradeError" Value="Une version plus récente d'AniSync est déjà installée." />
+  <String Id="ArpComments" Value="Met à jour ta liste AniList ou MyAnimeList automatiquement quand tu termines un épisode." />
+  <String Id="ShortcutDescription" Value="Synchro automatique AniList et MyAnimeList" />
+  <String Id="LaunchApp" Value="Lancer AniSync" />
+  <String Id="LicenseRtf" Value="License.fr.rtf" />
+</WixLocalization>

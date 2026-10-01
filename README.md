@@ -1,117 +1,124 @@
 # AniSync
 
-Appli Windows qui repère l'anime que tu regardes sur ton PC et met ta liste **AniList** ou **MyAnimeList** à jour toute seule quand tu as vraiment fini un épisode.
+**English** · [Français](README.fr.md)
 
-## Installer
+A Windows app that spots the anime you're watching on your PC and updates your **AniList** or **MyAnimeList** list on its own once you've really finished an episode.
 
-`build.ps1` génère dans `dist\` :
+## Install
 
-- **`AniSync-Setup-<version>.exe`** (recommandé) : l'installeur, aux couleurs d'AniSync.
-- `AniSync-Setup-<version>.msi` : le même installeur au format Windows Installer, avec l'interface standard de Windows. Utile pour un déploiement ou une installation silencieuse (`msiexec /i AniSync-Setup-<version>.msi /qn`).
-- `AniSync-Portable-<version>.exe` : version sans installation, à lancer de n'importe où. Elle partage les réglages et les comptes avec la version installée (`%APPDATA%\AniSync`). Une seule des deux peut tourner à la fois.
+`build.ps1` builds, in `dist\`:
 
-L'installeur (`.exe` ou `.msi`) :
+- **`AniSync-Setup-<version>.exe`** (recommended): the installer, in AniSync colors, in English or French depending on your Windows language.
+- `AniSync-Setup-<version>-en.msi` / `-fr.msi`: the same installer as a Windows Installer package, in English or French, with the standard Windows UI. Handy for deployment or a silent install (`msiexec /i AniSync-Setup-<version>-en.msi /qn`).
+- `AniSync-Portable-<version>.exe`: no-install version, runs from anywhere. It shares settings and accounts with the installed version (`%APPDATA%\AniSync`). Only one of the two can run at a time.
 
-- installe pour ton compte Windows, sans droits admin, dans `%LOCALAPPDATA%\Programs\AniSync` ;
-- crée les raccourcis Bureau et menu Démarrer ;
-- active le lancement avec Windows, via un raccourci dans le dossier Démarrage, désactivable dans l'appli ;
-- ajoute AniSync à Paramètres > Applications pour le désinstaller.
+The installer (`.exe` or `.msi`):
 
-Pour une mise à jour, lance un installeur plus récent : il ferme l'appli si elle est ouverte et garde tes réglages et ton compte.
+- installs for your Windows account, without admin rights, in `%LOCALAPPDATA%\Programs\AniSync`;
+- creates Desktop and Start menu shortcuts;
+- turns on start with Windows, through a shortcut in the Startup folder, which you can turn off in the app;
+- adds AniSync to Settings > Apps so you can uninstall it.
 
-Tout est autonome : .NET est inclus, rien d'autre à installer (Windows 10/11 64 bits).
+To update, run a newer installer: it closes the app if it's open and keeps your settings and accounts.
 
-## Premier lancement
+Everything is self-contained: .NET is included, nothing else to install (64-bit Windows 10/11).
 
-À la première ouverture, clique sur **Ajouter un compte** puis choisis **AniList** ou **MyAnimeList**. La fenêtre de connexion guide les 3 étapes. Elles ne sont à faire qu'une fois par site, parce que chaque site demande que l'appli ait sa propre clé.
+## Language
+
+The app shows up in English or French depending on your Windows language. To force one: Settings > **Language** (Auto, Français or English), then **Restart**. The browser extension follows the browser's language.
+
+## First launch
+
+On first launch, click **Add an account** and pick **AniList** or **MyAnimeList**. The sign-in window walks you through 3 steps. You only do them once per site, because each site requires the app to have its own key.
 
 | | AniList | MyAnimeList |
 |---|---|---|
-| Page où créer la clé | https://anilist.co/settings/developer, **Create New Client** | https://myanimelist.net/apiconfig, **Create ID** (App Type : *other*) |
+| Page to create the key | https://anilist.co/settings/developer, **Create New Client** | https://myanimelist.net/apiconfig, **Create ID** (App Type: *other*) |
 | Redirect URL | `http://localhost:47813/callback` | `http://localhost:47813/callback` |
-| Ensuite | colle le **Client ID** dans AniSync, puis **Approve** | colle le **Client ID** dans AniSync, puis **Allow** |
+| Then | paste the **Client ID** into AniSync, then **Approve** | paste the **Client ID** into AniSync, then **Allow** |
 
-Les jetons sont chiffrés avec ton compte Windows (DPAPI) dans `%APPDATA%\AniSync\settings.json`. Celui d'AniList reste valable un an ; celui de MyAnimeList est renouvelé automatiquement.
+Tokens are encrypted with your Windows account (DPAPI) in `%APPDATA%\AniSync\settings.json`. The AniList one lasts a year; the MyAnimeList one is renewed automatically.
 
-## Comment ça marche
+## How it works
 
-- **Détection** : l'appli lit les sessions média de Windows (Edge, Chrome, Opera, Firefox, lecteur multimédia…), qui donnent le titre, la lecture ou la pause et la durée. Pour les lecteurs qui ne publient pas ces infos (VLC, MPC-HC, mpv, PotPlayer…), elle lit le titre de la fenêtre et vérifie que le lecteur émet réellement du son.
-- **Épisode terminé** : seul le temps de **lecture réelle** compte. Les pauses et les sauts en avant sont exclus. Le seuil par défaut est de 20 min et se règle dans l'appli. Pour les épisodes courts, il suffit de 85 % de la durée.
-- **Mise à jour AniList** :
-  - Anime absent de ta liste : il est ajouté (En cours, ou Terminé si c'était le dernier épisode).
-  - AniList à l'ép. 8 et tu finis l'ép. 12 : il passe à 12.
-  - AniList à l'ép. 12 et tu revois l'ép. 8 : **rien ne change**.
-  - À voir, En pause ou Abandonné : repasse En cours. Dernier épisode : Terminé, avec les dates de début et de fin remplies.
-- **Saisons** : « Saison 2 Épisode 3 », « S02E03 » et la numérotation continue (« Jujutsu Kaisen ép. 30 » devient la saison 2, ép. 6) sont gérés.
-- **Titres français** : ils sont souvent dans les synonymes d'AniList, mais sa recherche ne renvoie rien quand le texte contient une lettre accentuée (« Je veux t'aimer jusqu'à ta mort »). L'appli cherche donc aussi la version sans accents. Si AniList n'a vraiment pas le titre, elle demande en dernier recours à Wikidata ses équivalents anglais, romaji et japonais, puis relance la recherche avec ces noms.
-- **Bouton Écoute** : coupe ou réactive la surveillance. Il est aussi disponible par clic droit sur l'icône près de l'horloge.
+- **Detection**: the app reads Windows media sessions (Edge, Chrome, Opera, Firefox, Media Player…), which give the title, play or pause, and the duration. For players that don't publish this (VLC, MPC-HC, mpv, PotPlayer…), it reads the window title and checks that the player is actually playing sound.
+- **Finished episode**: only **actual playback time** counts. Pauses and skipping ahead are excluded. The default threshold is 20 min and can be changed in the app. For short episodes, 85% of the length is enough.
+- **List update**:
+  - Anime missing from your list: it's added (Watching, or Completed if it was the last episode).
+  - List at ep. 8 and you finish ep. 12: it moves to 12.
+  - List at ep. 12 and you rewatch ep. 8: **nothing changes**.
+  - Planning, Paused or Dropped: back to Watching. Last episode: Completed, with start and finish dates filled in.
+- **Seasons**: "Season 2 Episode 3", "S02E03" and continuous numbering ("Jujutsu Kaisen ep. 30" becomes season 2, ep. 6) are handled.
+- **French titles**: they're often in AniList's synonyms, but its search returns nothing when the text contains an accented letter ("Je veux t'aimer jusqu'à ta mort"). So the app also searches without accents. If AniList really doesn't have the title, as a last resort it asks Wikidata for its English, romaji and Japanese equivalents, then searches again with those names.
+- **Listening switch**: turns monitoring off or back on. It's also in the right-click menu of the icon by the clock.
 
-**Quand l'appli n'est pas sûre**, elle ne devine pas : elle propose les animes au titre le plus proche et te laisse valider.
+**When the app isn't sure**, it doesn't guess: it suggests the anime with the closest titles and lets you confirm.
 
-- Dans « En cours », pendant l'épisode : jusqu'à 3 propositions avec un bouton **C'est lui**.
-- Dans l'historique, une fois l'épisode fini : **Oui** (c'est bien lui), **Autre…** (en choisir un autre) ou **Ignorer** (ce n'est pas un anime, ne plus suivre ce titre).
-- Une notification « AniSync a un doute » part une fois par série quand la proposition est très proche. Un clic dessus ouvre l'appli.
+- In the current episode panel, during the episode: up to 3 suggestions with a **That's it** button.
+- In the history, once the episode is over: **Yes** (that's the one), **Other…** (pick another) or **Ignore** (not an anime, stop following this title).
+- An "AniSync isn't sure" notification shows up once per series when the suggestion is very close. Clicking it opens the app.
 
-Ton choix est mémorisé pour les prochains épisodes. Si l'appli s'est trompée d'anime, **Corriger** permet de choisir le bon, et chaque mise à jour de l'historique a un bouton **Annuler**.
+Your choice is remembered for the next episodes. If the app picked the wrong anime, **Fix** lets you choose the right one, and every update in the history has an **Undo** button.
 
-Fermer la fenêtre laisse AniSync tourner dans la zone de notification. Pour quitter, fais un clic droit sur l'icône puis **Quitter**.
+Closing the window keeps AniSync running in the notification area. To quit, right-click the icon and choose **Quit**.
 
-## Comptes (AniList et MyAnimeList)
+## Accounts (AniList and MyAnimeList)
 
-Tu peux ajouter **autant de comptes que tu veux**, AniList comme MyAnimeList, et choisir le **compte actif** : c'est lui qui est mis à jour quand tu finis un épisode.
+You can add **as many accounts as you like**, AniList and MyAnimeList alike, and pick the **active account**: that's the one updated when you finish an episode.
 
-- **En haut de l'appli** : un clic sur ton avatar ou ton nom ouvre ta page de profil AniList ou MyAnimeList, et la petite flèche à côté ouvre la **fenêtre Comptes**. Dans celle-ci, tu peux utiliser un compte, le reconnecter, le retirer ou en ajouter un ; un clic sur un compte ouvre aussi sa page.
-- **Changement rapide** : clic droit sur l'icône près de l'horloge, puis **Compte**.
-- **Ajouter un deuxième compte du même site** : la connexion autorise le compte ouvert dans ton navigateur, donc déconnecte-toi d'abord de ce site dans le navigateur (ou connecte-toi au bon compte). Reconnecter un compte déjà présent le met à jour, sans créer de doublon.
-- **Ce qui reste commun à tous les comptes** : corrections, titres ignorés et réglages. L'historique indique quel compte a été mis à jour, et « Annuler » agit sur ce compte-là.
-- Une connexion expirée ne supprime pas le compte : il passe en « à reconnecter ».
-- Les jetons de chaque compte sont chiffrés avec ton compte Windows (DPAPI).
-- En venant d'une version précédente, tes connexions existantes deviennent des comptes automatiquement.
+- **At the top of the app**: clicking your avatar or name opens your AniList or MyAnimeList profile page, and the small arrow next to it opens the **Accounts window**. There you can use an account, reconnect it, remove it or add one; clicking an account also opens its page.
+- **Quick switch**: right-click the icon by the clock, then **Account**.
+- **Adding a second account on the same site**: signing in authorizes the account open in your browser, so first sign out of that site in the browser (or sign in to the right account). Reconnecting an existing account updates it without creating a duplicate.
+- **Shared by all accounts**: fixes, ignored titles and settings. The history shows which account was updated, and "Undo" acts on that account.
+- An expired sign-in doesn't remove the account: it's marked "needs reconnecting".
+- Each account's tokens are encrypted with your Windows account (DPAPI).
+- Coming from an earlier version, your existing sign-ins become accounts automatically.
 
 **MyAnimeList**
 
-- La reconnaissance des animes ne change pas : elle se fait toujours via la recherche AniList (titres français, saisons, propositions…), qui donne le numéro MyAnimeList de chaque anime.
-- Les règles sont les mêmes : on avance sans jamais reculer, on ajoute si l'anime manque, on passe en « Terminé » au dernier épisode, et « Annuler » reste disponible.
-- Il faut créer une fois une clé sur https://myanimelist.net/apiconfig (App Type : *other*, Redirect URL : `http://localhost:47813/callback`). L'appli renouvelle ensuite la connexion toute seule.
-- Limite : quelques rares animes présents sur AniList n'ont pas de fiche MyAnimeList, et l'appli le signale.
+- Anime recognition doesn't change: it still goes through AniList search (French titles, seasons, suggestions…), which gives each anime's MyAnimeList number.
+- The rules are the same: move forward without ever going back, add the anime if it's missing, mark it Completed at the last episode, and "Undo" is still there.
+- You create a key once at https://myanimelist.net/apiconfig (App Type: *other*, Redirect URL: `http://localhost:47813/callback`). After that, the app renews the sign-in on its own.
+- Limitation: a few rare anime on AniList have no MyAnimeList entry, and the app tells you so.
 
-## Extension navigateur (Crunchyroll…)
+## Browser extension (Crunchyroll…)
 
-Crunchyroll n'affiche ni le nom de l'anime ni le numéro d'épisode dans ses onglets (seulement « Season 1 <titre de l'épisode> »). L'extension lit directement dans la page ce que l'appli ne peut pas voir, puis le transmet à AniSync **sur ce PC uniquement** (`http://localhost:47814`). Elle récupère :
+Crunchyroll shows neither the anime name nor the episode number in its tabs (only "Season 1 <episode title>"). The extension reads what the app can't see straight from the page, then passes it to AniSync **on this PC only** (`http://localhost:47814`). It picks up:
 
-- la série, en anglais depuis l'adresse et en français depuis la page ;
-- la saison et le numéro d'épisode ;
-- l'état réel de la vidéo : lecture, pause, durée.
+- the series, in English from the address and in the page's language from the page;
+- the season and episode number;
+- the actual video state: playing, paused, duration.
 
-Elle fonctionne aussi quand le lecteur est intégré dans une autre page (iframe).
+It also works when the player is embedded in another page (iframe).
 
-- **Installation** : dans l'appli, Réglages > Extension navigateur > **Installer…**, puis suis les étapes (mode développeur > « Charger l'extension non empaquetée »). Elle marche dans Opera, Edge, Chrome et Brave.
-- **Hors navigateur**, rien ne change : AniSync continue de détecter les lecteurs vidéo et les applis comme avant. Quand l'extension est active dans un navigateur, c'est elle qui fait foi pour ce navigateur.
-- Seule l'extension peut parler à AniSync : les requêtes sans son en-tête `X-AniSync-Extension` sont refusées, et une page web ne peut pas l'ajouter.
+- **Install**: in the app, Settings > Browser extension > **Install…**, then follow the steps (developer mode > "Load unpacked"). It works in Opera, Edge, Chrome and Brave.
+- **Outside the browser**, nothing changes: AniSync keeps detecting video players and apps as before. When the extension is active in a browser, it's the reference for that browser.
+- Only the extension can talk to AniSync: requests without its `X-AniSync-Extension` header are refused, and a web page can't add it.
 
-## Limites connues
+## Known limitations
 
-- Sans l'extension, il faut que le numéro d'épisode apparaisse dans le titre de l'onglet, de la vidéo ou du fichier. Ce n'est pas le cas sur Crunchyroll ni sur Netflix, par exemple.
-- Netflix (avec l'extension) : le titre n'est lu que lorsque les contrôles du lecteur s'affichent au moins une fois pendant l'épisode.
-- Le temps d'un épisode à moitié vu est gardé tant que l'appli tourne (12 h max). Il est perdu si tu la quittes.
+- Without the extension, the episode number has to appear in the tab, video or file title. That's not the case on Crunchyroll or Netflix, for example.
+- Netflix (with the extension): the title is only read once the player controls have shown at least once during the episode.
+- Time from a half-watched episode is kept while the app runs (12 h max). It's lost if you quit.
 
-## Développement
+## Development
 
-Tout reconstruire (tests, exe portable, `.msi` puis `Setup.exe`) :
+Rebuild everything (tests, portable exe, `.msi` files, then `Setup.exe`):
 
 ```bash
 powershell -ExecutionPolicy Bypass -File build.ps1
 ```
 
-La version vient de `<Version>` dans `src/AniSync/AniSync.csproj` : il suffit de l'augmenter avant de reconstruire pour publier une mise à jour.
+The version comes from `<Version>` in `src/AniSync/AniSync.csproj`: just bump it before rebuilding to ship an update.
 
-- `installer/`: `.msi` WiX 5 (`Package.wxs`). WiX est récupéré via NuGet, rien à installer.
-- `installer/bundle/`: le `Setup.exe` qui emballe le `.msi`, avec le thème et les textes français dans `Theme/`.
+- `installer/`: WiX 5 `.msi` (`Package.wxs`), one per language (strings in `Package.en-US.wxl` and `Package.fr-FR.wxl`, licenses `License.en.rtf` and `License.fr.rtf`). WiX comes from NuGet, nothing to install.
+- `installer/bundle/`: the `Setup.exe` wrapping the English `.msi`, with its theme and strings in `Theme/` (`AniSyncTheme.wxl` in English, `AniSyncTheme.fr.wxl` for French Windows).
 
-- `browser-extension/`: l'extension (Manifest V3), embarquée dans l'exe
-- `src/AniSync/Detection`: lecture des sessions média, des fenêtres et du son, réception des infos de l'extension (`BrowserBridge.cs`)
-- `src/AniSync/Core`: analyse des titres, temps de visionnage, règles de synchro, historique
-- `src/AniSync/AniList`: API GraphQL, connexion OAuth, recherche de l'anime, traduction des titres français (`WikidataTitles.cs`), liste AniList (`AniListService.cs`)
-- `src/AniSync/Mal`: liste MyAnimeList (API v2, connexion OAuth + PKCE, conversion des statuts)
-- `src/AniSync/Core/ListServices.cs`: interface commune aux deux sites
-- Journal : `%APPDATA%\AniSync\anisync.log`
+- `browser-extension/`: the extension (Manifest V3), embedded in the exe, with its strings in `_locales/`
+- `src/AniSync/Detection`: reading media sessions, windows and sound, receiving the extension's info (`BrowserBridge.cs`)
+- `src/AniSync/Core`: title parsing, watch time, sync rules, history
+- `src/AniSync/AniList`: GraphQL API, OAuth sign-in, anime lookup, French title translation (`WikidataTitles.cs`), AniList list (`AniListService.cs`)
+- `src/AniSync/Mal`: MyAnimeList list (API v2, OAuth + PKCE sign-in, status mapping)
+- `src/AniSync/Core/ListServices.cs`: common interface for both sites
+- `src/AniSync/Core/Lang.cs` and `src/AniSync/Ui/Tr.cs`: English and French strings (`L.T("français", "English")`)
+- Log: `%APPDATA%\AniSync\anisync.log`

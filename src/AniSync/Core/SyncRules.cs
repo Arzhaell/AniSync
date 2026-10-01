@@ -24,7 +24,7 @@ public static class SyncRules
 {
     public static SyncDecision Decide(ListEntry? entry, int episode, int? totalEpisodes)
     {
-        if (episode < 1) return SyncDecision.Skip("Épisode 0 ignoré");
+        if (episode < 1) return SyncDecision.Skip(L.T("Épisode 0 ignoré", "Episode 0 ignored"));
 
         bool finishes = totalEpisodes is > 0 && episode >= totalEpisodes;
         string doneOrWatching = finishes ? MediaListStatus.Completed : MediaListStatus.Current;
@@ -33,10 +33,10 @@ public static class SyncRules
             return new SyncDecision(SyncAction.Create, episode, doneOrWatching, SetStartedToday: true, SetCompletedToday: finishes);
 
         if (entry.Status == MediaListStatus.Completed)
-            return SyncDecision.Skip("Déjà terminé sur AniList");
+            return SyncDecision.Skip(L.T("Déjà terminé sur ta liste", "Already completed on your list"));
 
         if (episode <= entry.Progress)
-            return SyncDecision.Skip($"Déjà à jour (ép. {entry.Progress} sur AniList)");
+            return SyncDecision.Skip(L.T($"Déjà à jour (ép. {entry.Progress} sur ta liste)", $"Already up to date (ep. {entry.Progress} on your list)"));
 
         if (entry.Status == MediaListStatus.Repeating)
         {

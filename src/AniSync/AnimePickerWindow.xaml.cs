@@ -19,8 +19,9 @@ public partial class AnimePickerWindow : Window
     {
         InitializeComponent();
         _client = client;
-        DetectedText.Text = $"Détecté : « {parsed.Title} »" + (parsed.Season is > 1 ? $", saison {parsed.Season}" : "") +
-                            $", épisode {parsed.Episode}. Choisis l'anime (la saison qui contient cet épisode, ou la première saison).";
+        DetectedText.Text = L.T(
+            $"Détecté : «\u00A0{parsed.Title}\u00A0»" + (parsed.Season is > 1 ? $", saison {parsed.Season}" : "") + $", épisode {parsed.Episode}. Choisis l'anime (la saison qui contient cet épisode, ou la première saison).",
+            $"Detected: \"{parsed.Title}\"" + (parsed.Season is > 1 ? $", season {parsed.Season}" : "") + $", episode {parsed.Episode}. Pick the anime (the season that contains this episode, or the first season).");
         SearchBox.Text = parsed.Title;
         SourceInitialized += (_, _) => WindowTheming.UseDarkTitleBar(this);
         Loaded += async (_, _) =>
@@ -45,7 +46,7 @@ public partial class AnimePickerWindow : Window
     {
         if (suggest is null) return false;
         int version = ++_searchVersion;
-        StatusText.Text = "Recherche des titres proches…";
+        StatusText.Text = L.T("Recherche des titres proches…", "Looking for similar titles…");
         try
         {
             var found = await suggest();
@@ -62,7 +63,7 @@ public partial class AnimePickerWindow : Window
     void ShowResults(IReadOnlyList<AniMedia> found)
     {
         Results.ItemsSource = found.Select(m => new Choice(m.Id, m.Title, Details(m), m.CoverUrl)).ToList();
-        StatusText.Text = found.Count == 0 ? "Aucun résultat. Essaie un autre nom (romaji ou anglais) ou colle le lien AniList." : "";
+        StatusText.Text = found.Count == 0 ? L.T("Aucun résultat. Essaie un autre nom (romaji ou anglais) ou colle le lien AniList.", "No results. Try another name (romaji or English) or paste the AniList link.") : "";
         if (found.Count > 0) Results.SelectedIndex = 0;
     }
 
@@ -71,7 +72,7 @@ public partial class AnimePickerWindow : Window
         var text = SearchBox.Text.Trim();
         if (text.Length == 0) return;
         int version = ++_searchVersion;
-        StatusText.Text = "Recherche…";
+        StatusText.Text = L.T("Recherche…", "Searching…");
         Results.ItemsSource = null;
 
         try
@@ -84,7 +85,7 @@ public partial class AnimePickerWindow : Window
         }
         catch (Exception ex)
         {
-            if (version == _searchVersion) StatusText.Text = $"Recherche impossible : {ex.Message}";
+            if (version == _searchVersion) StatusText.Text = L.T($"Recherche impossible : {ex.Message}", $"Search failed: {ex.Message}");
         }
     }
 
@@ -93,7 +94,7 @@ public partial class AnimePickerWindow : Window
         var parts = new List<string>();
         if (m.Format is not null) parts.Add(m.Format.Replace('_', ' '));
         if (m.Year is int y) parts.Add(y.ToString());
-        if (m.Episodes is int e) parts.Add($"{e} ép.");
+        if (m.Episodes is int e) parts.Add(L.T($"{e} ép.", $"{e} ep."));
         parts.Add($"#{m.Id}");
         return string.Join(" · ", parts);
     }
@@ -113,7 +114,7 @@ public partial class AnimePickerWindow : Window
     {
         if (Results.SelectedItem is not Choice choice)
         {
-            StatusText.Text = "Sélectionne un anime dans la liste.";
+            StatusText.Text = L.T("Sélectionne un anime dans la liste.", "Select an anime in the list.");
             return;
         }
         _pickedId = choice.Id;

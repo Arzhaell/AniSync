@@ -12,7 +12,9 @@ public partial class AccountsWindow : Window
     {
         public string Name => Profile.DisplayName;
         public string Site => Profile.Service;
-        public string Status => !SignedIn ? "à reconnecter" : IsActive ? "compte actif" : "connecté";
+        public string Status => !SignedIn ? L.T("à reconnecter", "needs reconnecting")
+            : IsActive ? L.T("compte actif", "active account")
+            : L.T("connecté", "signed in");
         public string StatusColor => !SignedIn ? "#F5A524" : IsActive ? "#3DDC84" : "#8FA3B8";
         public string BorderColor => IsActive ? "#2B6E52" : "#22324A";
         public bool CanUse => SignedIn && !IsActive;
@@ -62,7 +64,8 @@ public partial class AccountsWindow : Window
     {
         if ((sender as FrameworkElement)?.Tag is not AccountRow row) return;
         var answer = MessageBox.Show(this,
-            $"Retirer le compte {row.Profile.Label} d'AniSync ?\nTa liste sur {row.Site} n'est pas touchée ; tu pourras le rajouter plus tard.",
+            L.T($"Retirer le compte {row.Profile.Label} d'AniSync ?\nTa liste sur {row.Site} n'est pas touchée ; tu pourras le rajouter plus tard.",
+                $"Remove the account {row.Profile.Label} from AniSync?\nYour {row.Site} list isn't touched; you can add it back later."),
             "AniSync", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer != MessageBoxResult.Yes) return;
         _controller.RemoveProfile(row.Profile);

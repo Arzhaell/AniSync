@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Nodes;
 using AniSync.AniList;
+using AniSync.Core;
 
 namespace AniSync.Mal;
 
@@ -40,7 +41,7 @@ public static class MalAuth
         }
         catch (HttpListenerException ex)
         {
-            throw new AniListException($"Impossible d'ouvrir le port {AniListAuth.Port} ({ex.Message}). Ferme l'appli qui l'utilise et réessaie.");
+            throw new AniListException(L.T($"Impossible d'ouvrir le port {AniListAuth.Port} ({ex.Message}). Ferme l'appli qui l'utilise et réessaie.", $"Couldn't open port {AniListAuth.Port} ({ex.Message}). Close the app using it and try again."));
         }
         using var stop = ct.Register(() => { try { listener.Stop(); } catch { } });
 
@@ -71,12 +72,12 @@ public static class MalAuth
             var query = context.Request.QueryString;
             if (query["error"] is { } error)
             {
-                await RespondAsync(context.Response, false, "Connexion refusée par MyAnimeList.");
-                throw new AniListException($"Connexion refusée par MyAnimeList ({error}).");
+                await RespondAsync(context.Response, false, L.T("Connexion refusée par MyAnimeList.", "MyAnimeList refused the sign-in."));
+                throw new AniListException(L.T($"Connexion refusée par MyAnimeList ({error}).", $"MyAnimeList refused the sign-in ({error})."));
             }
             if (query["state"] != state || query["code"] is not { Length: > 0 } code)
             {
-                await RespondAsync(context.Response, false, "Réponse inattendue : relance la connexion depuis AniSync.");
+                await RespondAsync(context.Response, false, L.T("Réponse inattendue : relance la connexion depuis AniSync.", "Unexpected response: start the sign-in again from AniSync."));
                 continue;
             }
 
@@ -90,7 +91,7 @@ public static class MalAuth
                     ["redirect_uri"] = AniListAuth.RedirectUrl,
                     ["code_verifier"] = verifier,
                 }, ct);
-                await RespondAsync(context.Response, true, "Tu peux fermer cet onglet.");
+                await RespondAsync(context.Response, true, L.T("Tu peux fermer cet onglet.", "You can close this tab."));
                 return tokens;
             }
             catch (Exception ex)
@@ -120,26 +121,26 @@ public static class MalAuth
         {
             var error = json?["error"]?.GetValue<string>();
             if (error == "invalid_client")
-                throw new AniListException("Client ID refusé par MyAnimeList : vérifie-le, et que le type d'appli est « other ».");
+                throw new AniListException(L.T("Client ID refusé par MyAnimeList : vérifie-le, et que le type d'appli est «\u00A0other\u00A0».", "MyAnimeList rejected the Client ID: check it, and that the app type is \"other\"."));
             if ((int)response.StatusCode >= 500)
-                throw new HttpRequestException($"MyAnimeList indisponible ({(int)response.StatusCode})");
-            throw new AuthExpiredException($"MyAnimeList a refusé la connexion ({error ?? ((int)response.StatusCode).ToString()}).");
+                throw new HttpRequestException(L.T($"MyAnimeList indisponible ({(int)response.StatusCode})", $"MyAnimeList unavailable ({(int)response.StatusCode})"));
+            throw new AuthExpiredException(L.T($"MyAnimeList a refusé la connexion ({error ?? ((int)response.StatusCode).ToString()}).", $"MyAnimeList refused the sign-in ({error ?? ((int)response.StatusCode).ToString()})."));
         }
 
         var access = json?["access_token"]?.GetValue<string>();
         var refresh = json?["refresh_token"]?.GetValue<string>();
         var expiresIn = json?["expires_in"]?.GetValue<int>() ?? 3600;
         if (string.IsNullOrEmpty(access) || string.IsNullOrEmpty(refresh))
-            throw new AniListException("Réponse de MyAnimeList incomplète.");
+            throw new AniListException(L.T("Réponse de MyAnimeList incomplète.", "Incomplete response from MyAnimeList."));
         return new MalTokens(access, refresh, DateTime.UtcNow.AddSeconds(expiresIn));
     }
 
     static async Task RespondAsync(HttpListenerResponse response, bool ok, string message)
     {
-        var title = ok ? "Connecté à AniSync ✓" : "Connexion impossible";
+        var title = ok ? L.T("Connecté à AniSync ✓", "Connected to AniSync ✓") : L.T("Connexion impossible", "Sign-in failed");
         var color = ok ? "#3ddc84" : "#f2555a";
         var html = $$"""
-            <!doctype html><html lang="fr"><head><meta charset="utf-8"><title>AniSync</title>
+            <!doctype html><html lang="{{(L.IsFrench ? "fr" : "en")}}"><head><meta charset="utf-8"><title>AniSync</title>
             <style>body{margin:0;height:100vh;display:grid;place-items:center;background:#0b1622;color:#e6edf3;font:16px "Segoe UI",sans-serif}
             .card{background:#152232;border:1px solid #22324a;border-radius:16px;padding:32px 40px;text-align:center;max-width:440px}
             h1{margin:0 0 8px;font-size:22px;color:{{color}}} p{margin:0;color:#8fa3b8}</style></head>

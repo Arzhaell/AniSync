@@ -28,7 +28,7 @@ public sealed class Profile
     [JsonIgnore] public bool IsSignedIn => !string.IsNullOrEmpty(EncryptedToken);
 
     [JsonIgnore]
-    public string DisplayName => string.IsNullOrWhiteSpace(UserName) ? $"Compte {Service}" : UserName;
+    public string DisplayName => string.IsNullOrWhiteSpace(UserName) ? L.T($"Compte {Service}", $"{Service} account") : UserName;
 
     /// <summary>« Alice · MyAnimeList » : pour l'historique et les menus.</summary>
     [JsonIgnore] public string Label => $"{DisplayName} · {Service}";

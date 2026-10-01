@@ -30,10 +30,12 @@ public sealed class MainViewModel : ObservableObject
     bool _notifications = true;
     bool _startWithWindows;
     int _ignoredCount;
+    string _language = L.AutoCode;
+    bool _needsRestart;
     bool _hasProfile;
     string _accountCaption = "";
     string _accountCaptionColor = "#8FA3B8";
-    string _extensionStatus = "Non installée";
+    string _extensionStatus = L.T("Non installée", "Not installed");
     string _extensionStatusColor = "#8FA3B8";
 
     public MainViewModel()
@@ -72,6 +74,26 @@ public sealed class MainViewModel : ObservableObject
     }
 
     public bool HasIgnored => IgnoredCount > 0;
+
+    /// <summary>Langue choisie : « auto », « fr » ou « en » (appliquée au prochain démarrage).</summary>
+    public string Language
+    {
+        get => _language;
+        set
+        {
+            if (!Set(ref _language, value)) return;
+            OnPropertyChanged(nameof(IsLanguageAuto));
+            OnPropertyChanged(nameof(IsLanguageFrench));
+            OnPropertyChanged(nameof(IsLanguageEnglish));
+        }
+    }
+
+    public bool IsLanguageAuto { get => Language == L.AutoCode; set { if (value) Language = L.AutoCode; } }
+    public bool IsLanguageFrench { get => Language == L.FrenchCode; set { if (value) Language = L.FrenchCode; } }
+    public bool IsLanguageEnglish { get => Language == L.EnglishCode; set { if (value) Language = L.EnglishCode; } }
+
+    /// <summary>La langue choisie diffère de celle affichée : il faut redémarrer.</summary>
+    public bool NeedsRestart { get => _needsRestart; set => Set(ref _needsRestart, value); }
 
     /// <summary>Au moins un compte existe (sinon l'en-tête propose d'en ajouter un).</summary>
     public bool HasProfile { get => _hasProfile; set => Set(ref _hasProfile, value); }

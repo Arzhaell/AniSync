@@ -1,8 +1,9 @@
 <Window x:Class="AniSync.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:AniSync.Ui"
         Title="AniSync" Icon="Assets/AniSync.ico"
-        Width="470" Height="760" MinWidth="400" MinHeight="600"
+        Width="470" Height="780" MinWidth="400" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource BgBrush}" Foreground="{StaticResource TextBrush}"
         FontFamily="Segoe UI" FontSize="13" UseLayoutRounding="True">
@@ -16,18 +17,18 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- En-tête : nom de l'appli + compte AniList -->
+        <!-- En-tête : nom de l'appli + compte actif -->
         <Grid>
             <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="AniSync" FontSize="22" FontWeight="SemiBold"/>
-                <TextBlock Text="Synchro AniList &amp; MyAnimeList" Style="{StaticResource Muted}"/>
+                <TextBlock Text="{x:Static ui:Tr.AppTagline}" Style="{StaticResource Muted}"/>
             </StackPanel>
 
             <!-- Compte actif : avatar/nom = page du profil sur le site ; flèche = fenêtre Comptes -->
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal"
                         Visibility="{Binding HasProfile, Converter={StaticResource BoolToVis}}">
                 <Button Style="{StaticResource GhostButton}" Padding="6,4" Click="OpenProfile_Click"
-                        AutomationProperties.Name="Profil" ToolTip="Ouvrir mon profil sur le site">
+                        AutomationProperties.Name="{x:Static ui:Tr.OpenMyProfileTip}" ToolTip="{x:Static ui:Tr.OpenMyProfileTip}">
                     <StackPanel Orientation="Horizontal">
                         <Grid Width="30" Height="30">
                             <Ellipse Fill="{StaticResource SubtleBrush}"/>
@@ -45,19 +46,19 @@
                     </StackPanel>
                 </Button>
                 <Button Style="{StaticResource GhostButton}" Padding="8,10" Click="Accounts_Click"
-                        AutomationProperties.Name="Comptes" ToolTip="Changer de compte, en ajouter ou en retirer">
+                        AutomationProperties.Name="{x:Static ui:Tr.Accounts}" ToolTip="{x:Static ui:Tr.AccountsTip}">
                     <TextBlock Text="&#xE70D;" Style="{StaticResource Icon}" FontSize="11"/>
                 </Button>
             </StackPanel>
 
             <Button HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource AccentButton}"
-                    Click="Accounts_Click" Content="Ajouter un compte"
+                    Click="Accounts_Click" Content="{x:Static ui:Tr.AddAccount}"
                     Visibility="{Binding HasProfile, Converter={StaticResource InvBoolToVis}}"/>
         </Grid>
 
         <!-- Le bouton Écoute -->
         <ToggleButton Grid.Row="1" Margin="0,18,0,0" Style="{StaticResource ListenToggle}"
-                      IsChecked="{Binding Listening, Mode=TwoWay}" ToolTip="Activer / désactiver l'écoute du PC"/>
+                      IsChecked="{Binding Listening, Mode=TwoWay}" ToolTip="{x:Static ui:Tr.ListenTip}"/>
 
         <!-- Zone centrale défilante : « En cours » puis l'historique -->
         <ScrollViewer Grid.Row="2" Grid.RowSpan="2" Margin="0,14,-8,0" Padding="0,0,8,0"
@@ -110,7 +111,7 @@
                             <TextBlock Text="{Binding CurrentSource}" Style="{StaticResource Caption}"/>
                         </StackPanel>
                         <TextBlock Text="{Binding CurrentTitle}" FontSize="16" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,4,0,0"
-                                   Cursor="Hand" MouseLeftButtonUp="CurrentTitle_Click" ToolTip="Ouvrir la fiche de l'anime"/>
+                                   Cursor="Hand" MouseLeftButtonUp="CurrentTitle_Click" ToolTip="{x:Static ui:Tr.OpenAnimeTip}"/>
                         <TextBlock Text="{Binding CurrentEpisode}" Foreground="{StaticResource AccentBrush}" Margin="0,2,0,0" TextWrapping="Wrap"/>
 
                         <ProgressBar Value="{Binding CurrentProgress, Mode=OneWay}" Margin="0,10,0,0">
@@ -152,9 +153,9 @@
                                                            ToolTip="{Binding Title}"/>
                                                 <TextBlock Text="{Binding Details}" Style="{StaticResource Muted}" FontSize="12"/>
                                             </StackPanel>
-                                            <Button Grid.Column="2" Style="{StaticResource AccentButton}" Content="C'est lui" Padding="10,5"
+                                            <Button Grid.Column="2" Style="{StaticResource AccentButton}" Content="{x:Static ui:Tr.ThisOne}" Padding="10,5"
                                                     VerticalAlignment="Center" Tag="{Binding}" Click="ConfirmSuggestion_Click"
-                                                    ToolTip="Associer ce titre à cet anime (retenu pour les prochains épisodes)"/>
+                                                    ToolTip="{x:Static ui:Tr.ThisOneTip}"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -162,15 +163,15 @@
                         </ItemsControl>
 
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                            <Button Style="{StaticResource BaseButton}" Click="FixCurrent_Click" AutomationProperties.Name="Corriger"
-                                    ToolTip="Ce n'est pas le bon anime ? Choisis le bon">
+                            <Button Style="{StaticResource BaseButton}" Click="FixCurrent_Click" AutomationProperties.Name="{x:Static ui:Tr.Fix}"
+                                    ToolTip="{x:Static ui:Tr.FixCurrentTip}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE70F;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Corriger"/>
+                                    <TextBlock Text="{x:Static ui:Tr.Fix}"/>
                                 </StackPanel>
                             </Button>
                             <Button Style="{StaticResource GhostButton}" Click="IgnoreCurrent_Click" Margin="6,0,0,0"
-                                    ToolTip="Ne plus jamais suivre ce titre" Content="Ignorer ce titre"/>
+                                    ToolTip="{x:Static ui:Tr.IgnoreTitleTip}" Content="{x:Static ui:Tr.IgnoreTitle}"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>
@@ -179,10 +180,10 @@
 
         <!-- Historique -->
         <StackPanel Margin="0,18,0,0">
-            <TextBlock Text="Historique" FontSize="15" FontWeight="SemiBold"/>
+            <TextBlock Text="{x:Static ui:Tr.History}" FontSize="15" FontWeight="SemiBold"/>
 
             <TextBlock Style="{StaticResource Muted}" Margin="0,10,0,0" TextWrapping="Wrap"
-                       Text="Rien pour l'instant. Chaque épisode terminé apparaîtra ici, avec la possibilité d'annuler."
+                       Text="{x:Static ui:Tr.HistoryEmpty}"
                        Visibility="{Binding HasHistory, Converter={StaticResource InvBoolToVis}}"/>
 
                 <ItemsControl ItemsSource="{Binding History}" Margin="0,6,0,0">
@@ -204,21 +205,21 @@
                                         <TextBlock Text="{Binding TimeText}" Style="{StaticResource Caption}" FontWeight="Normal" Margin="0,3,0,0"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="8,0,0,0">
-                                        <Button Style="{StaticResource BaseButton}" Content="Annuler" Tag="{Binding}" Click="Undo_Click"
+                                        <Button Style="{StaticResource BaseButton}" Content="{x:Static ui:Tr.Undo}" Tag="{Binding}" Click="Undo_Click"
                                                 Visibility="{Binding CanUndo, Converter={StaticResource BoolToVis}}"
-                                                ToolTip="Remettre ta liste comme avant"/>
-                                        <Button Style="{StaticResource AccentButton}" Content="Oui" Tag="{Binding}" Click="ConfirmHistory_Click"
+                                                ToolTip="{x:Static ui:Tr.UndoTip}"/>
+                                        <Button Style="{StaticResource AccentButton}" Content="{x:Static ui:Tr.Yes}" Tag="{Binding}" Click="ConfirmHistory_Click"
                                                 Visibility="{Binding CanConfirm, Converter={StaticResource BoolToVis}}"
-                                                ToolTip="C'est bien cet anime : l'associer et synchroniser" Margin="0,0,0,4"/>
-                                        <Button Style="{StaticResource BaseButton}" Content="Autre…" Tag="{Binding}" Click="FixHistory_Click"
+                                                ToolTip="{x:Static ui:Tr.YesTip}" Margin="0,0,0,4"/>
+                                        <Button Style="{StaticResource BaseButton}" Content="{x:Static ui:Tr.Other}" Tag="{Binding}" Click="FixHistory_Click"
                                                 Visibility="{Binding CanConfirm, Converter={StaticResource BoolToVis}}"
-                                                ToolTip="Ce n'est pas lui : choisir un autre anime"/>
-                                        <Button Style="{StaticResource AccentButton}" Content="Corriger" Tag="{Binding}" Click="FixHistory_Click"
+                                                ToolTip="{x:Static ui:Tr.OtherTip}"/>
+                                        <Button Style="{StaticResource AccentButton}" Content="{x:Static ui:Tr.Fix}" Tag="{Binding}" Click="FixHistory_Click"
                                                 Visibility="{Binding CanFixOnly, Converter={StaticResource BoolToVis}}"
-                                                ToolTip="Choisir le bon anime et synchroniser"/>
-                                        <Button Style="{StaticResource GhostButton}" Content="Ignorer" Tag="{Binding}" Click="IgnoreHistory_Click"
+                                                ToolTip="{x:Static ui:Tr.FixHistoryTip}"/>
+                                        <Button Style="{StaticResource GhostButton}" Content="{x:Static ui:Tr.Ignore}" Tag="{Binding}" Click="IgnoreHistory_Click"
                                                 Visibility="{Binding CanFix, Converter={StaticResource BoolToVis}}"
-                                                ToolTip="Ce n'est pas un anime : ne plus suivre ce titre" Margin="0,2,0,0"/>
+                                                ToolTip="{x:Static ui:Tr.IgnoreHistoryTip}" Margin="0,2,0,0"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -239,9 +240,9 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
-                        <TextBlock Text="Temps minimum pour compter un épisode" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock Text="{x:Static ui:Tr.MinTime}" FontWeight="SemiBold" TextWrapping="Wrap"/>
                         <TextBlock Style="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap" Margin="0,1,0,0"
-                                   Text="Lecture réelle, pauses exclues (85 % de la durée pour les épisodes courts)"/>
+                                   Text="{x:Static ui:Tr.MinTimeHint}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Style="{StaticResource BaseButton}" Padding="9,4" Content="−" Click="MinusMinutes_Click"/>
@@ -257,22 +258,47 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
-                        <TextBlock Text="Extension navigateur (Crunchyroll, Opera, Edge…)" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                        <TextBlock Text="{x:Static ui:Tr.Extension}" FontWeight="SemiBold" TextWrapping="Wrap"/>
                         <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                             <Ellipse Width="7" Height="7" Fill="{Binding ExtensionStatusColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                             <TextBlock Text="{Binding ExtensionStatus}" Style="{StaticResource Muted}" FontSize="12" TextWrapping="Wrap"/>
                         </StackPanel>
                     </StackPanel>
-                    <Button Grid.Column="1" Style="{StaticResource BaseButton}" Content="Installer…" VerticalAlignment="Center"
-                            Click="InstallExtension_Click" ToolTip="Installer l'extension dans Opera ou Edge"/>
+                    <Button Grid.Column="1" Style="{StaticResource BaseButton}" Content="{x:Static ui:Tr.InstallEllipsis}" VerticalAlignment="Center"
+                            Click="InstallExtension_Click" ToolTip="{x:Static ui:Tr.InstallExtensionTip}"/>
+                </Grid>
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,12,0">
+                        <TextBlock Text="{x:Static ui:Tr.Language}" FontWeight="SemiBold"/>
+                        <TextBlock Style="{StaticResource Muted}" FontSize="12" Text="{x:Static ui:Tr.LanguageHint}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource AccentButton}" Content="{x:Static ui:Tr.Restart}" Margin="0,0,8,0"
+                                ToolTip="{x:Static ui:Tr.RestartTip}" Click="Restart_Click"
+                                Visibility="{Binding NeedsRestart, Converter={StaticResource BoolToVis}}"/>
+                        <Border Background="#0F1A28" CornerRadius="9" Padding="3">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Style="{StaticResource Segment}" GroupName="Language" Content="Auto"
+                                             IsChecked="{Binding IsLanguageAuto, Mode=TwoWay}"/>
+                                <RadioButton Style="{StaticResource Segment}" GroupName="Language" Content="Français"
+                                             IsChecked="{Binding IsLanguageFrench, Mode=TwoWay}"/>
+                                <RadioButton Style="{StaticResource Segment}" GroupName="Language" Content="English"
+                                             IsChecked="{Binding IsLanguageEnglish, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                 </Grid>
                 <WrapPanel Margin="0,12,0,0">
-                    <CheckBox Content="Lancer avec Windows" IsChecked="{Binding StartWithWindows}" Margin="0,0,18,4"/>
-                    <CheckBox Content="Notifications" IsChecked="{Binding Notifications}" Margin="0,0,18,4"/>
+                    <CheckBox Content="{x:Static ui:Tr.StartWithWindows}" IsChecked="{Binding StartWithWindows}" Margin="0,0,18,4"/>
+                    <CheckBox Content="{x:Static ui:Tr.Notifications}" IsChecked="{Binding Notifications}" Margin="0,0,18,4"/>
                     <Button Style="{StaticResource GhostButton}" Padding="0,0" Click="ClearIgnored_Click"
                             Visibility="{Binding HasIgnored, Converter={StaticResource BoolToVis}}">
                         <TextBlock>
-                            <Run Text="Réactiver les titres ignorés ("/><Run Text="{Binding IgnoredCount, Mode=OneWay}"/><Run Text=")"/>
+                            <Run Text="{x:Static ui:Tr.ReenableIgnored}"/><Run Text="{Binding IgnoredCount, Mode=OneWay}"/><Run Text=")"/>
                         </TextBlock>
                     </Button>
                 </WrapPanel>

@@ -1,6 +1,7 @@
 ﻿# Construit dans dist\ :
-#   AniSync-Setup-<version>.exe      installeur (recommandé)
-#   AniSync-Setup-<version>.msi      le même installeur au format Windows Installer
+#   AniSync-Setup-<version>.exe      installeur (recommandé), en anglais ou en français selon Windows
+#   AniSync-Setup-<version>-en.msi   le même installeur au format Windows Installer, en anglais
+#   AniSync-Setup-<version>-fr.msi   ... et en français
 #   AniSync-Portable-<version>.exe   version sans installation
 # Usage : powershell -ExecutionPolicy Bypass -File build.ps1
 $ErrorActionPreference = "Stop"
@@ -31,8 +32,13 @@ $msiOut = Join-Path $work "msi"
 dotnet build (Join-Path $root "installer\AniSync.Installer.wixproj") -c Release --nologo `
     "-p:ProductVersion=$version" "-p:AppExe=$appExe" -o $msiOut
 if ($LASTEXITCODE) { throw "Échec du .msi." }
-$msi = Join-Path $dist "AniSync-Setup-$version.msi"
-Copy-Item (Get-ChildItem $msiOut -Recurse -Filter *.msi | Select-Object -First 1).FullName $msi
+# Un .msi par langue (installer\Package.<culture>.wxl), rangés par WiX dans un sous-dossier par culture.
+foreach ($culture in "en-US", "fr-FR") {
+    $lang = $culture.Substring(0, 2)
+    Copy-Item (Join-Path $msiOut "$culture\AniSync-Setup.msi") (Join-Path $dist "AniSync-Setup-$version-$lang.msi")
+}
+# Le Setup.exe embarque le .msi anglais ; ses propres écrans suivent la langue de Windows.
+$msi = Join-Path $dist "AniSync-Setup-$version-en.msi"
 
 Write-Host "`n[4/4] Installeur EXE" -ForegroundColor Cyan
 $exeOut = Join-Path $work "bundle"

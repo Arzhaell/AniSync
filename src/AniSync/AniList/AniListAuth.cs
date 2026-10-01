@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Net;
 using System.Text;
+using AniSync.Core;
 
 namespace AniSync.AniList;
 
@@ -24,7 +25,7 @@ public static class AniListAuth
         }
         catch (HttpListenerException ex)
         {
-            throw new AniListException($"Impossible d'ouvrir le port {Port} ({ex.Message}). Ferme l'appli qui l'utilise et réessaie.");
+            throw new AniListException(L.T($"Impossible d'ouvrir le port {Port} ({ex.Message}). Ferme l'appli qui l'utilise et réessaie.", $"Couldn't open port {Port} ({ex.Message}). Close the app using it and try again."));
         }
 
         using var stop = ct.Register(() => { try { listener.Stop(); } catch { } });
@@ -73,26 +74,28 @@ public static class AniListAuth
         response.Close();
     }
 
-    const string CallbackPage = """
+    static string Js(string text) => System.Text.Json.JsonSerializer.Serialize(text);
+
+    static string CallbackPage => $$"""
         <!doctype html>
-        <html lang="fr"><head><meta charset="utf-8"><title>AniSync</title>
+        <html lang="{{(L.IsFrench ? "fr" : "en")}}"><head><meta charset="utf-8"><title>AniSync</title>
         <style>
           body{margin:0;height:100vh;display:grid;place-items:center;background:#0b1622;color:#e6edf3;font:16px "Segoe UI",sans-serif}
           .card{background:#152232;border:1px solid #22324a;border-radius:16px;padding:32px 40px;text-align:center;max-width:420px}
           h1{margin:0 0 8px;font-size:22px} p{margin:0;color:#8fa3b8} .ok{color:#3ddc84} .err{color:#f2555a}
         </style></head>
-        <body><div class="card"><h1 id="t">Connexion…</h1><p id="m">Un instant.</p></div>
+        <body><div class="card"><h1 id="t">{{WebUtility.HtmlEncode(L.T("Connexion…", "Signing in…"))}}</h1><p id="m">{{WebUtility.HtmlEncode(L.T("Un instant.", "One moment."))}}</p></div>
         <script>
           const p = new URLSearchParams(location.hash.slice(1));
           const token = p.get('access_token');
           const t = document.getElementById('t'), m = document.getElementById('m');
           if (token) {
             fetch('/token', { method: 'POST', body: token })
-              .then(() => { t.textContent = 'Connecté à AniSync ✓'; t.className = 'ok'; m.textContent = 'Tu peux fermer cet onglet.'; history.replaceState(null, '', '/callback'); })
-              .catch(() => { t.textContent = 'AniSync ne répond pas'; t.className = 'err'; m.textContent = "Vérifie que l'appli est ouverte puis réessaie."; });
+              .then(() => { t.textContent = {{Js(L.T("Connecté à AniSync ✓", "Connected to AniSync ✓"))}}; t.className = 'ok'; m.textContent = {{Js(L.T("Tu peux fermer cet onglet.", "You can close this tab."))}}; history.replaceState(null, '', '/callback'); })
+              .catch(() => { t.textContent = {{Js(L.T("AniSync ne répond pas", "AniSync isn't responding"))}}; t.className = 'err'; m.textContent = {{Js(L.T("Vérifie que l'appli est ouverte puis réessaie.", "Make sure the app is open, then try again."))}}; });
           } else {
-            t.textContent = 'Connexion refusée'; t.className = 'err';
-            m.textContent = new URLSearchParams(location.search).get('error_description') || "AniList n'a pas renvoyé de jeton.";
+            t.textContent = {{Js(L.T("Connexion refusée", "Sign-in refused"))}}; t.className = 'err';
+            m.textContent = new URLSearchParams(location.search).get('error_description') || {{Js(L.T("AniList n'a pas renvoyé de jeton.", "AniList didn't send back a token."))}};
           }
         </script></body></html>
         """;

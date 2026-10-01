@@ -97,7 +97,7 @@ public sealed class MalService : IListService
     public async Task<ListEntry> SaveAsync(ListState state, SyncDecision decision, CancellationToken ct = default)
     {
         var saved = await SendAsync(HttpMethod.Patch, $"/anime/{state.SiteId}/my_list_status", MalMapping.UpdateForm(decision, DateTime.Today), ct);
-        return MalMapping.ParseEntry(state.SiteId, saved) ?? throw new AniListException("Réponse de MyAnimeList incomplète.");
+        return MalMapping.ParseEntry(state.SiteId, saved) ?? throw new AniListException(L.T("Réponse de MyAnimeList incomplète.", "Incomplete response from MyAnimeList."));
     }
 
     public async Task UndoAsync(HistoryItem item, CancellationToken ct = default)
@@ -105,9 +105,9 @@ public sealed class MalService : IListService
         if (item.SiteId is not int malId) return;
         var (entry, _) = await GetEntryAsync(malId, ct);
         if (entry is null)
-            throw new AniListException("Cet anime n'est plus dans ta liste.");
+            throw new AniListException(L.T("Cet anime n'est plus dans ta liste.", "This anime is no longer in your list."));
         if (item.NewProgress is int expected && entry.Progress != expected)
-            throw new AniListException($"Ta liste a changé depuis (ép. {entry.Progress} maintenant) : annulation impossible.");
+            throw new AniListException(L.T($"Ta liste a changé depuis (ép. {entry.Progress} maintenant) : annulation impossible.", $"Your list has changed since (ep. {entry.Progress} now): can't undo."));
 
         if (item.WasCreated)
             await SendAsync(HttpMethod.Delete, $"/anime/{malId}/my_list_status", null, ct);
@@ -137,21 +137,21 @@ public sealed class MalService : IListService
         using var response = await Http.SendAsync(request, ct);
         if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
-            if (retried) throw new AuthExpiredException("Session MyAnimeList expirée : reconnecte-toi.");
+            if (retried) throw new AuthExpiredException(L.T("Session MyAnimeList expirée : reconnecte-toi.", "MyAnimeList session expired: sign in again."));
             await EnsureFreshTokenAsync(force: true, ct);
             return await SendAsync(method, path, form, ct, retried: true);
         }
 
         var text = await response.Content.ReadAsStringAsync(ct);
         if ((int)response.StatusCode >= 500 || response.StatusCode == HttpStatusCode.TooManyRequests)
-            throw new HttpRequestException($"MyAnimeList indisponible ({(int)response.StatusCode})");
+            throw new HttpRequestException(L.T($"MyAnimeList indisponible ({(int)response.StatusCode})", $"MyAnimeList unavailable ({(int)response.StatusCode})"));
         if (method == HttpMethod.Delete && response.StatusCode == HttpStatusCode.NotFound)
             return new JsonObject(); // déjà retiré
         if (!response.IsSuccessStatusCode)
         {
             string? message = null;
             try { message = JsonNode.Parse(text)?["message"]?.GetValue<string>(); } catch { /* non JSON */ }
-            throw new AniListException($"MyAnimeList : {message ?? $"erreur HTTP {(int)response.StatusCode}"}");
+            throw new AniListException($"MyAnimeList : {message ?? L.T($"erreur HTTP {(int)response.StatusCode}", $"HTTP error {(int)response.StatusCode}")}");
         }
 
         try { return JsonNode.Parse(text) ?? new JsonObject(); }
@@ -160,15 +160,15 @@ public sealed class MalService : IListService
 
     async Task EnsureFreshTokenAsync(bool force, CancellationToken ct)
     {
-        if (_tokens is null) throw new AuthExpiredException("Pas connecté à MyAnimeList.");
+        if (_tokens is null) throw new AuthExpiredException(L.T("Pas connecté à MyAnimeList.", "Not signed in to MyAnimeList."));
         if (!force && _tokens.ExpiresAtUtc - DateTime.UtcNow > RefreshMargin) return;
 
         await _refreshGate.WaitAsync(ct);
         try
         {
-            if (_tokens is null) throw new AuthExpiredException("Pas connecté à MyAnimeList.");
+            if (_tokens is null) throw new AuthExpiredException(L.T("Pas connecté à MyAnimeList.", "Not signed in to MyAnimeList."));
             if (!force && _tokens.ExpiresAtUtc - DateTime.UtcNow > RefreshMargin) return; // déjà renouvelé entre-temps
-            var clientId = Profile.ClientId ?? throw new AuthExpiredException("Client ID MyAnimeList manquant : reconnecte-toi.");
+            var clientId = Profile.ClientId ?? throw new AuthExpiredException(L.T("Client ID MyAnimeList manquant : reconnecte-toi.", "MyAnimeList Client ID missing: sign in again."));
 
             try
             {
@@ -179,7 +179,7 @@ public sealed class MalService : IListService
             catch (AuthExpiredException)
             {
                 SignOut();
-                throw new AuthExpiredException("Session MyAnimeList expirée : reconnecte-toi.");
+                throw new AuthExpiredException(L.T("Session MyAnimeList expirée : reconnecte-toi.", "MyAnimeList session expired: sign in again."));
             }
         }
         finally

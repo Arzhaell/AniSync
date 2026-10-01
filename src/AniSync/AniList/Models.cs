@@ -1,3 +1,5 @@
+using AniSync.Core;
+
 namespace AniSync.AniList;
 
 public sealed record FuzzyDate(int? Year, int? Month, int? Day)
@@ -47,14 +49,14 @@ public static class MediaListStatus
     public const string Paused = "PAUSED";
     public const string Repeating = "REPEATING";
 
-    public static string ToFrench(string status) => status switch
+    public static string ToDisplay(string status) => status switch
     {
-        Current => "En cours",
-        Planning => "À voir",
-        Completed => "Terminé",
-        Dropped => "Abandonné",
-        Paused => "En pause",
-        Repeating => "Revisionnage",
+        Current => L.T("En cours", "Watching"),
+        Planning => L.T("À voir", "Planning"),
+        Completed => L.T("Terminé", "Completed"),
+        Dropped => L.T("Abandonné", "Dropped"),
+        Paused => L.T("En pause", "Paused"),
+        Repeating => L.T("Revisionnage", "Rewatching"),
         _ => status,
     };
 }

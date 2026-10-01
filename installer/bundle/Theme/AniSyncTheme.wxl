@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Textes français de l'installeur AniSync (identifiants du thème standard WiX). -->
-<WixLocalization Culture="fr-FR" Language="1036" xmlns="http://wixtoolset.org/schemas/v4/wxl">
-  <String Id="Caption" Value="Installation d'AniSync" />
+<!-- English strings of the AniSync installer (default; French in AniSyncTheme.fr.wxl). Ids from the standard WiX theme. -->
+<WixLocalization Culture="en-US" Language="1033" xmlns="http://wixtoolset.org/schemas/v4/wxl">
+  <String Id="Caption" Value="AniSync Setup" />
   <String Id="Title" Value="AniSync" />
-  <String Id="InstallTitle" Value="Installer AniSync" />
-  <String Id="CheckingForUpdatesLabel" Value="Recherche de mises à jour…" />
-  <String Id="UpdateButton" Value="&amp;Mettre à jour vers la version [WixStdBAUpdateAvailable]" />
-  <String Id="InstallHeader" Value="Ta liste AniList ou MyAnimeList à jour" />
-  <String Id="InstallMessage" Value="AniSync repère l'anime que tu regardes sur ce PC et met ta liste AniList ou MyAnimeList à jour quand tu as vraiment fini un épisode.&#xA;&#xA;•  Pour ton compte seulement, sans droits admin&#xA;•  Démarre avec Windows, discret près de l'horloge&#xA;•  Le bouton « Écoute » coupe tout à tout moment&#xA;•  Seuls le titre et ta progression partent en ligne" />
+  <String Id="InstallTitle" Value="Install AniSync" />
+  <String Id="CheckingForUpdatesLabel" Value="Checking for updates…" />
+  <String Id="UpdateButton" Value="&amp;Update to version [WixStdBAUpdateAvailable]" />
+  <String Id="InstallHeader" Value="Your AniList or MyAnimeList list, up to date" />
+  <String Id="InstallMessage" Value="AniSync spots the anime you're watching on this PC and updates your AniList or MyAnimeList list once you've really finished an episode.&#xA;&#xA;•  For your account only, no admin rights needed&#xA;•  Starts with Windows, sits quietly by the clock&#xA;•  The &quot;Listening&quot; switch turns it all off at any time&#xA;•  Only the title and your progress go online" />
   <String Id="InstallVersion" Value="Version [WixBundleVersion]" />
-  <String Id="ConfirmCancelMessage" Value="Veux-tu vraiment annuler ?" />
-  <String Id="ExecuteUpgradeRelatedBundleMessage" Value="Version précédente" />
-  <String Id="HelpHeader" Value="Aide de l'installeur" />
-  <String Id="HelpText" Value="/install | /uninstall | /layout [dossier] : installe, désinstalle ou copie l'installeur complet dans un dossier. Par défaut : installation.&#xA;&#xA;/passive | /quiet : interface minimale sans question, ou aucune interface.&#xA;&#xA;/norestart : ne jamais redémarrer.&#xA;/log fichier.txt : journal dans ce fichier (par défaut dans %TEMP%)." />
-  <String Id="HelpCloseButton" Value="&amp;Fermer" />
-  <String Id="InstallLicenseLinkText" Value="&lt;a href=&quot;#&quot;&gt;Conditions d'utilisation&lt;/a&gt; d'AniSync" />
-  <String Id="InstallAcceptCheckbox" Value="J'&amp;accepte les conditions d'utilisation" />
+  <String Id="ConfirmCancelMessage" Value="Are you sure you want to cancel?" />
+  <String Id="ExecuteUpgradeRelatedBundleMessage" Value="Previous version" />
+  <String Id="HelpHeader" Value="Setup help" />
+  <String Id="HelpText" Value="/install | /uninstall | /layout [folder]: installs, uninstalls or copies the full installer to a folder. Default: install.&#xA;&#xA;/passive | /quiet: minimal UI with no prompts, or no UI at all.&#xA;&#xA;/norestart: never restart.&#xA;/log log.txt: writes the log to this file (default: in %TEMP%)." />
+  <String Id="HelpCloseButton" Value="&amp;Close" />
+  <String Id="InstallLicenseLinkText" Value="AniSync &lt;a href=&quot;#&quot;&gt;terms of use&lt;/a&gt;" />
+  <String Id="InstallAcceptCheckbox" Value="I &amp;agree to the terms of use" />
   <String Id="InstallOptionsButton" Value="&amp;Options" />
-  <String Id="InstallInstallButton" Value="&amp;Installer" />
-  <String Id="InstallCancelButton" Value="Annuler" />
-  <String Id="OptionsHeader" Value="Options d'installation" />
-  <String Id="OptionsLocationLabel" Value="Dossier d'installation :" />
-  <String Id="OptionsBrowseButton" Value="&amp;Parcourir" />
+  <String Id="InstallInstallButton" Value="&amp;Install" />
+  <String Id="InstallCancelButton" Value="Cancel" />
+  <String Id="OptionsHeader" Value="Setup options" />
+  <String Id="OptionsLocationLabel" Value="Install folder:" />
+  <String Id="OptionsBrowseButton" Value="&amp;Browse" />
   <String Id="OptionsOkButton" Value="&amp;OK" />
-  <String Id="OptionsCancelButton" Value="Annuler" />
-  <String Id="ProgressHeader" Value="Installation en cours…" />
-  <String Id="ProgressLabel" Value="Étape :" />
-  <String Id="OverallProgressPackageText" Value="Préparation…" />
-  <String Id="ProgressCancelButton" Value="Annuler" />
-  <String Id="ModifyHeader" Value="AniSync est déjà installé" />
-  <String Id="ModifyMessage" Value="Tu peux le désinstaller, ou simplement fermer cette fenêtre.&#xA;&#xA;Pour installer une nouvelle version, lance directement le nouvel installeur : la mise à jour se fait toute seule." />
-  <String Id="ModifyRepairButton" Value="&amp;Réparer" />
-  <String Id="ModifyUninstallButton" Value="&amp;Désinstaller" />
-  <String Id="ModifyCancelButton" Value="Fermer" />
-  <String Id="SuccessHeader" Value="Terminé" />
-  <String Id="SuccessCacheHeader" Value="Terminé" />
-  <String Id="SuccessInstallHeader" Value="AniSync est installé !" />
-  <String Id="SuccessLayoutHeader" Value="Copie terminée" />
-  <String Id="SuccessModifyHeader" Value="Modification terminée" />
-  <String Id="SuccessRepairHeader" Value="Réparation terminée" />
-  <String Id="SuccessUninstallHeader" Value="AniSync a été désinstallé" />
-  <String Id="SuccessUnsafeUninstallHeader" Value="AniSync a été désinstallé" />
-  <String Id="SuccessInstallMessage" Value="Il démarrera aussi automatiquement avec Windows (désactivable dans l'appli).&#xA;&#xA;Première étape : clique sur « Ajouter un compte » dans l'appli (AniList ou MyAnimeList). Ensuite, lance un épisode, AniSync s'occupe du reste." />
-  <String Id="SuccessUninstallMessage" Value="L'appli, ses raccourcis et le lancement avec Windows ont été retirés.&#xA;&#xA;Tes réglages restent dans %APPDATA%\AniSync au cas où tu le réinstallerais." />
-  <String Id="SuccessLaunchButton" Value="&amp;Lancer AniSync" />
-  <String Id="SuccessRestartText" Value="Tu dois redémarrer ton ordinateur pour terminer l'installation." />
-  <String Id="SuccessUninstallRestartText" Value="Tu dois redémarrer ton ordinateur pour terminer la désinstallation." />
-  <String Id="SuccessRestartButton" Value="&amp;Redémarrer" />
-  <String Id="SuccessCloseButton" Value="&amp;Fermer" />
-  <String Id="FailureHeader" Value="L'installation a échoué" />
-  <String Id="FailureCacheHeader" Value="L'opération a échoué" />
-  <String Id="FailureInstallHeader" Value="L'installation a échoué" />
-  <String Id="FailureLayoutHeader" Value="La copie a échoué" />
-  <String Id="FailureModifyHeader" Value="La modification a échoué" />
-  <String Id="FailureRepairHeader" Value="La réparation a échoué" />
-  <String Id="FailureUninstallHeader" Value="La désinstallation a échoué" />
-  <String Id="FailureUnsafeUninstallHeader" Value="La désinstallation a échoué" />
-  <String Id="FailureHyperlinkLogText" Value="Un problème a empêché l'opération d'aboutir. Pour plus de détails, ouvre le &lt;a href=&quot;#&quot;&gt;journal d'installation&lt;/a&gt;." />
-  <String Id="FailureRestartText" Value="Tu dois redémarrer ton ordinateur pour terminer l'annulation." />
-  <String Id="FailureRestartButton" Value="&amp;Redémarrer" />
-  <String Id="FailureCloseButton" Value="&amp;Fermer" />
-  <String Id="FilesInUseTitle" Value="Fichiers en cours d'utilisation" />
-  <String Id="FilesInUseLabel" Value="Ces applications utilisent des fichiers qui doivent être mis à jour :" />
-  <String Id="FilesInUseNetfxCloseRadioButton" Value="Fermer les &amp;applications." />
-  <String Id="FilesInUseCloseRadioButton" Value="Fermer les &amp;applications et essayer de les relancer." />
-  <String Id="FilesInUseDontCloseRadioButton" Value="&amp;Ne pas fermer les applications (un redémarrage sera nécessaire)." />
-  <String Id="FilesInUseRetryButton" Value="&amp;Réessayer" />
-  <String Id="FilesInUseIgnoreButton" Value="&amp;Ignorer" />
-  <String Id="FilesInUseExitButton" Value="&amp;Quitter" />
+  <String Id="OptionsCancelButton" Value="Cancel" />
+  <String Id="ProgressHeader" Value="Installing…" />
+  <String Id="ProgressLabel" Value="Step:" />
+  <String Id="OverallProgressPackageText" Value="Getting ready…" />
+  <String Id="ProgressCancelButton" Value="Cancel" />
+  <String Id="ModifyHeader" Value="AniSync is already installed" />
+  <String Id="ModifyMessage" Value="You can uninstall it, or just close this window.&#xA;&#xA;To install a new version, simply run the new installer: the update happens on its own." />
+  <String Id="ModifyRepairButton" Value="&amp;Repair" />
+  <String Id="ModifyUninstallButton" Value="&amp;Uninstall" />
+  <String Id="ModifyCancelButton" Value="Close" />
+  <String Id="SuccessHeader" Value="Done" />
+  <String Id="SuccessCacheHeader" Value="Done" />
+  <String Id="SuccessInstallHeader" Value="AniSync is installed!" />
+  <String Id="SuccessLayoutHeader" Value="Copy complete" />
+  <String Id="SuccessModifyHeader" Value="Change complete" />
+  <String Id="SuccessRepairHeader" Value="Repair complete" />
+  <String Id="SuccessUninstallHeader" Value="AniSync has been uninstalled" />
+  <String Id="SuccessUnsafeUninstallHeader" Value="AniSync has been uninstalled" />
+  <String Id="SuccessInstallMessage" Value="It will also start automatically with Windows (you can turn that off in the app).&#xA;&#xA;First step: click &quot;Add an account&quot; in the app (AniList or MyAnimeList). Then play an episode, AniSync takes care of the rest." />
+  <String Id="SuccessUninstallMessage" Value="The app, its shortcuts and the start with Windows have been removed.&#xA;&#xA;Your settings stay in %APPDATA%\AniSync in case you reinstall it." />
+  <String Id="SuccessLaunchButton" Value="&amp;Launch AniSync" />
+  <String Id="SuccessRestartText" Value="You must restart your computer to finish the installation." />
+  <String Id="SuccessUninstallRestartText" Value="You must restart your computer to finish the uninstallation." />
+  <String Id="SuccessRestartButton" Value="&amp;Restart" />
+  <String Id="SuccessCloseButton" Value="&amp;Close" />
+  <String Id="FailureHeader" Value="Setup failed" />
+  <String Id="FailureCacheHeader" Value="The operation failed" />
+  <String Id="FailureInstallHeader" Value="Setup failed" />
+  <String Id="FailureLayoutHeader" Value="The copy failed" />
+  <String Id="FailureModifyHeader" Value="The change failed" />
+  <String Id="FailureRepairHeader" Value="The repair failed" />
+  <String Id="FailureUninstallHeader" Value="Uninstall failed" />
+  <String Id="FailureUnsafeUninstallHeader" Value="Uninstall failed" />
+  <String Id="FailureHyperlinkLogText" Value="A problem stopped the operation from completing. For details, open the &lt;a href=&quot;#&quot;&gt;setup log&lt;/a&gt;." />
+  <String Id="FailureRestartText" Value="You must restart your computer to finish rolling back." />
+  <String Id="FailureRestartButton" Value="&amp;Restart" />
+  <String Id="FailureCloseButton" Value="&amp;Close" />
+  <String Id="FilesInUseTitle" Value="Files in use" />
+  <String Id="FilesInUseLabel" Value="These applications are using files that need to be updated:" />
+  <String Id="FilesInUseNetfxCloseRadioButton" Value="Close the &amp;applications." />
+  <String Id="FilesInUseCloseRadioButton" Value="Close the &amp;applications and try to restart them." />
+  <String Id="FilesInUseDontCloseRadioButton" Value="&amp;Do not close the applications (a restart will be required)." />
+  <String Id="FilesInUseRetryButton" Value="&amp;Retry" />
+  <String Id="FilesInUseIgnoreButton" Value="&amp;Ignore" />
+  <String Id="FilesInUseExitButton" Value="E&amp;xit" />
 </WixLocalization>

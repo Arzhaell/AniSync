@@ -67,9 +67,9 @@ public sealed class AniListService : IListService
 
         var media = await _client.GetMediaAsync(mediaId, ct);
         if (media.Entry is null)
-            throw new AniListException("Cet anime n'est plus dans ta liste.");
+            throw new AniListException(L.T("Cet anime n'est plus dans ta liste.", "This anime is no longer in your list."));
         if (item.NewProgress is int expected && media.Entry.Progress != expected)
-            throw new AniListException($"Ta liste a changé depuis (ép. {media.Entry.Progress} maintenant) : annulation impossible.");
+            throw new AniListException(L.T($"Ta liste a changé depuis (ép. {media.Entry.Progress} maintenant) : annulation impossible.", $"Your list has changed since (ep. {media.Entry.Progress} now): can't undo."));
 
         if (item.WasCreated)
             await _client.DeleteEntryAsync(media.Entry.Id, ct);

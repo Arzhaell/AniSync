@@ -20,13 +20,13 @@ public partial class ExtensionWindow : Window
         catch (Exception ex)
         {
             Log.Error("Extraction de l'extension", ex);
-            FolderBox.Text = $"Erreur : {ex.Message}";
+            FolderBox.Text = L.T($"Erreur : {ex.Message}", $"Error: {ex.Message}");
         }
     }
 
-    void CopyFolder_Click(object sender, RoutedEventArgs e) => Copy(ExtensionInstaller.Folder, "Chemin du dossier copié.");
-    void CopyOpera_Click(object sender, RoutedEventArgs e) => Copy("opera://extensions", "Adresse copiée : colle-la dans la barre d'adresse d'Opera.");
-    void CopyEdge_Click(object sender, RoutedEventArgs e) => Copy("edge://extensions", "Adresse copiée : colle-la dans la barre d'adresse d'Edge.");
+    void CopyFolder_Click(object sender, RoutedEventArgs e) => Copy(ExtensionInstaller.Folder, L.T("Chemin du dossier copié.", "Folder path copied."));
+    void CopyOpera_Click(object sender, RoutedEventArgs e) => Copy("opera://extensions", L.T("Adresse copiée : colle-la dans la barre d'adresse d'Opera.", "Address copied: paste it in Opera's address bar."));
+    void CopyEdge_Click(object sender, RoutedEventArgs e) => Copy("edge://extensions", L.T("Adresse copiée : colle-la dans la barre d'adresse d'Edge.", "Address copied: paste it in Edge's address bar."));
 
     void OpenFolder_Click(object sender, RoutedEventArgs e)
     {

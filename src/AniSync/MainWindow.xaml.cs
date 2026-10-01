@@ -44,6 +44,8 @@ public partial class MainWindow : Window
 
     public void ShowAccounts() => new AccountsWindow(_controller) { Owner = this }.ShowDialog();
 
+    void Restart_Click(object sender, RoutedEventArgs e) => ((App)Application.Current).Restart();
+
     void CurrentTitle_Click(object sender, RoutedEventArgs e) => Links.Open(_controller.CurrentSiteUrl);
 
     void FixCurrent_Click(object sender, RoutedEventArgs e)
@@ -73,7 +75,9 @@ public partial class MainWindow : Window
     {
         var parsed = _controller.CurrentParsed;
         if (parsed is null) return;
-        var answer = MessageBox.Show(this, $"Ne plus suivre « {parsed.Title} » ?\nTu pourras le réactiver dans les réglages.",
+        var answer = MessageBox.Show(this,
+            L.T($"Ne plus suivre « {parsed.Title} » ?\nTu pourras le réactiver dans les réglages.",
+                $"Stop tracking \"{parsed.Title}\"?\nYou can re-enable it in the settings."),
             "AniSync", MessageBoxButton.YesNo, MessageBoxImage.Question);
         if (answer == MessageBoxResult.Yes) _controller.IgnoreCurrent();
     }
@@ -83,7 +87,9 @@ public partial class MainWindow : Window
         if ((sender as FrameworkElement)?.Tag is not HistoryItem item) return;
         if (item.WasCreated)
         {
-            var answer = MessageBox.Show(this, $"Retirer « {item.Title} » de ta liste {item.Service} ?\n(Il y avait été ajouté automatiquement.)",
+            var answer = MessageBox.Show(this,
+                L.T($"Retirer « {item.Title} » de ta liste {item.Service} ?\n(Il y avait été ajouté automatiquement.)",
+                    $"Remove \"{item.Title}\" from your {item.Service} list?\n(It was added automatically.)"),
                 "AniSync", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (answer != MessageBoxResult.Yes) return;
         }

@@ -102,8 +102,8 @@
                                            HorizontalAlignment="Center" Foreground="{StaticResource MutedBrush}"/>
                             </Border>
                             <StackPanel Grid.Column="1" Margin="14,0,12,0" VerticalAlignment="Center">
-                                <TextBlock x:Name="Head" Text="Écoute désactivée" FontSize="17" FontWeight="SemiBold"/>
-                                <TextBlock x:Name="Sub" Text="Ta liste ne sera pas mise à jour" Margin="0,2,0,0"
+                                <TextBlock x:Name="Head" Text="{x:Static ui:Tr.ListenOff}" FontSize="17" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="Sub" Text="{x:Static ui:Tr.ListenOffHint}" Margin="0,2,0,0"
                                            Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap"/>
                             </StackPanel>
                             <Border x:Name="Track" Grid.Column="2" Width="48" Height="26" CornerRadius="13"
@@ -118,8 +118,8 @@
                             <Setter TargetName="Bd" Property="BorderBrush" Value="#2B6E52"/>
                             <Setter TargetName="IconBg" Property="Background" Value="#174634"/>
                             <Setter TargetName="Glyph" Property="Foreground" Value="{StaticResource GreenBrush}"/>
-                            <Setter TargetName="Head" Property="Text" Value="Écoute activée"/>
-                            <Setter TargetName="Sub" Property="Text" Value="AniSync surveille ce que tu regardes"/>
+                            <Setter TargetName="Head" Property="Text" Value="{x:Static ui:Tr.ListenOn}"/>
+                            <Setter TargetName="Sub" Property="Text" Value="{x:Static ui:Tr.ListenOnHint}"/>
                             <Setter TargetName="Track" Property="Background" Value="{StaticResource GreenBrush}"/>
                             <Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right"/>
                         </Trigger>

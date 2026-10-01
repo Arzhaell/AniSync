@@ -74,6 +74,7 @@ public sealed class AppController : IDisposable
         Vm.Notifications = Settings.Notifications;
         Vm.StartWithWindows = SafeStartupState();
         Vm.IgnoredCount = Settings.IgnoredTitles.Count;
+        Vm.Language = Settings.Language is L.FrenchCode or L.EnglishCode ? Settings.Language : L.AutoCode;
         foreach (var item in HistoryStore.Load()) Vm.History.Add(item);
         Vm.PropertyChanged += OnVmChanged;
         RefreshAccountView();
@@ -174,8 +175,8 @@ public sealed class AppController : IDisposable
         Vm.UserName = profile?.DisplayName;
         Vm.Avatar = LoadImage(profile?.AvatarUrl);
         (Vm.AccountCaption, Vm.AccountCaptionColor) = profile is null ? ("", "#8FA3B8")
-            : Active.IsAuthenticated ? ($"{profile.Service} · connecté", "#3DDC84")
-            : ($"{profile.Service} · à reconnecter", "#F5A524");
+            : Active.IsAuthenticated ? ($"{profile.Service} · {L.T("connecté", "signed in")}", "#3DDC84")
+            : ($"{profile.Service} · {L.T("à reconnecter", "sign in again")}", "#F5A524");
         ProfilesChanged?.Invoke();
     }
 
@@ -246,10 +247,10 @@ public sealed class AppController : IDisposable
     {
         var cur = Vm.Listening ? _current : null;
         Vm.HasCurrent = cur is not null;
-        Vm.EmptyText = Vm.Listening ? "Rien en lecture pour l'instant" : "L'écoute est désactivée";
+        Vm.EmptyText = Vm.Listening ? L.T("Rien en lecture pour l'instant", "Nothing playing right now") : L.T("L'écoute est désactivée", "Listening is off");
         Vm.EmptyHint = Vm.Listening
-            ? "Lance un épisode dans ton navigateur ou ton lecteur vidéo : il apparaîtra ici."
-            : "Active l'écoute pour que tes épisodes soient comptés.";
+            ? L.T("Lance un épisode dans ton navigateur ou ton lecteur vidéo : il apparaîtra ici.", "Start an episode in your browser or video player: it will show up here.")
+            : L.T("Active l'écoute pour que tes épisodes soient comptés.", "Turn listening on so your episodes get counted.");
         if (cur is null)
         {
             ShowSuggestions(null);
@@ -266,17 +267,17 @@ public sealed class AppController : IDisposable
         var media = info?.Media;
 
         Vm.CurrentTitle = media?.Title ?? cur.Parsed.Title;
-        var episode = $"Épisode {cur.Parsed.Episode}";
-        if (cur.Parsed.Season is > 1) episode = $"Saison {cur.Parsed.Season} · {episode}";
-        if (media is not null && info!.Problem is null && info.Episode != cur.Parsed.Episode) episode += $"  (= ép. {info.Episode} sur {Active.Name})";
+        var episode = L.T($"Épisode {cur.Parsed.Episode}", $"Episode {cur.Parsed.Episode}");
+        if (cur.Parsed.Season is > 1) episode = $"{L.T("Saison", "Season")} {cur.Parsed.Season} · {episode}";
+        if (media is not null && info!.Problem is null && info.Episode != cur.Parsed.Episode) episode += L.T($"  (= ép. {info.Episode} sur {Active.Name})", $"  (= ep. {info.Episode} on {Active.Name})");
         Vm.CurrentEpisode = episode;
         Vm.CurrentPlaying = cur.IsPlaying;
-        Vm.CurrentSource = $"{cur.SourceName} · {(cur.IsPlaying ? "en lecture" : "en pause")}";
+        Vm.CurrentSource = $"{cur.SourceName} · {(cur.IsPlaying ? L.T("en lecture", "playing") : L.T("en pause", "paused"))}";
         Vm.CurrentProgress = cur.RequiredSeconds > 0 ? Math.Clamp(cur.WatchedSeconds / cur.RequiredSeconds, 0, 1) : 0;
         Vm.CurrentCompleted = cur.Completed;
         Vm.CurrentTime = cur.Completed
-            ? "Épisode compté comme vu ✓"
-            : $"{FormatTime(cur.WatchedSeconds)} regardées sur {FormatTime(cur.RequiredSeconds)} nécessaires";
+            ? L.T("Épisode compté comme vu ✓", "Episode counted as watched ✓")
+            : L.T($"{FormatTime(cur.WatchedSeconds)} regardées sur {FormatTime(cur.RequiredSeconds)} nécessaires", $"{FormatTime(cur.WatchedSeconds)} watched of {FormatTime(cur.RequiredSeconds)} needed");
         Vm.CurrentCover = LoadImage(media?.CoverUrl);
 
         (Vm.CurrentList, Vm.CurrentListColor) = DescribeList(info);
@@ -298,31 +299,31 @@ public sealed class AppController : IDisposable
         var parts = new List<string>();
         if (m.Format is not null) parts.Add(m.Format.Replace('_', ' '));
         if (m.Year is int year) parts.Add(year.ToString());
-        if (m.Episodes is int episodes) parts.Add($"{episodes} ép.");
+        if (m.Episodes is int episodes) parts.Add(L.T($"{episodes} ép.", $"{episodes} ep."));
         return string.Join(" · ", parts);
     }
 
     (string, string) DescribeList(CurrentInfo? info)
     {
         const string muted = "#8FA3B8", warn = "#F5A524", accent = "#3DB4F2", ok = "#3DDC84";
-        if (info is null || info.Loading) return ("Recherche sur AniList…", muted);
+        if (info is null || info.Loading) return (L.T("Recherche sur AniList…", "Searching AniList…"), muted);
         if (info.Media is null && info.Suggestions.Count > 0)
-            return ("Je ne reconnais pas ce titre avec certitude. Est-ce l'un de ces animes ?", warn);
-        if (info.Media is null) return (info.Problem ?? "Anime introuvable sur AniList : clique sur « Corriger ».", warn);
-        if (info.Problem is not null) return (info.Problem + " : clique sur « Corriger ».", warn);
-        if (Settings.ActiveProfile is null) return ("Ajoute un compte AniList ou MyAnimeList pour synchroniser.", warn);
-        if (!Active.IsAuthenticated) return ($"Reconnecte le compte {Active.Profile.Label} pour synchroniser.", warn);
-        if (info.NotOnSite) return ($"Cet anime n'existe pas sur {Active.Name} : il ne pourra pas être synchronisé.", warn);
-        if (info.State is null) return ($"Lecture de ta liste {Active.Name}…", muted);
+            return (L.T("Je ne reconnais pas ce titre avec certitude. Est-ce l'un de ces animes ?", "I'm not sure I recognize this title. Is it one of these anime?"), warn);
+        if (info.Media is null) return (info.Problem ?? L.T("Anime introuvable sur AniList : clique sur « Corriger ».", "Anime not found on AniList: click \"Fix\"."), warn);
+        if (info.Problem is not null) return (info.Problem + L.T(" : clique sur « Corriger ».", ": click \"Fix\"."), warn);
+        if (Settings.ActiveProfile is null) return (L.T("Ajoute un compte AniList ou MyAnimeList pour synchroniser.", "Add an AniList or MyAnimeList account to sync."), warn);
+        if (!Active.IsAuthenticated) return (L.T($"Reconnecte le compte {Active.Profile.Label} pour synchroniser.", $"Sign in to {Active.Profile.Label} again to sync."), warn);
+        if (info.NotOnSite) return (L.T($"Cet anime n'existe pas sur {Active.Name} : il ne pourra pas être synchronisé.", $"This anime doesn't exist on {Active.Name}: it can't be synced."), warn);
+        if (info.State is null) return (L.T($"Lecture de ta liste {Active.Name}…", $"Reading your {Active.Name} list…"), muted);
 
         var entry = info.State.Entry;
-        if (entry is null) return ("Pas encore dans ta liste : il sera ajouté à la fin de l'épisode.", accent);
+        if (entry is null) return (L.T("Pas encore dans ta liste : il sera ajouté à la fin de l'épisode.", "Not in your list yet: it will be added when the episode ends."), accent);
 
         var total = info.State.TotalEpisodes is int t ? $"/{t}" : "";
-        var text = $"Sur ta liste : ép. {entry.Progress}{total} · {MediaListStatus.ToFrench(entry.Status)}";
+        var text = L.T($"Sur ta liste : ép. {entry.Progress}{total} · {MediaListStatus.ToDisplay(entry.Status)}", $"On your list: ep. {entry.Progress}{total} · {MediaListStatus.ToDisplay(entry.Status)}");
         if (entry.Status == MediaListStatus.Completed || info.Episode <= entry.Progress)
-            return (text + " · déjà vu, rien ne changera", muted);
-        return (text + $" → passera à {info.Episode}", ok);
+            return (text + L.T(" · déjà vu, rien ne changera", " · already watched, nothing will change"), muted);
+        return (text + L.T($" → passera à {info.Episode}", $" → will move to {info.Episode}"), ok);
     }
 
     async Task LoadInfoAsync(ParsedEpisode p)
@@ -352,12 +353,12 @@ public sealed class AppController : IDisposable
         catch (AuthExpiredException)
         {
             OnAuthExpired();
-            result = new CurrentInfo(false, null, p.Episode, $"Session {Active.Name} expirée : reconnecte-toi.");
+            result = new CurrentInfo(false, null, p.Episode, L.T($"Session {Active.Name} expirée : reconnecte-toi.", $"{Active.Name} session expired: sign in again."));
         }
         catch (Exception ex)
         {
             Log.Error($"Infos AniList / {Active.Name} pour {p}", ex);
-            result = new CurrentInfo(false, null, p.Episode, $"{Active.Name} injoignable pour le moment.");
+            result = new CurrentInfo(false, null, p.Episode, L.T($"{Active.Name} injoignable pour le moment.", $"Can't reach {Active.Name} right now."));
             _infoKey = null; // on réessaiera, mais pas à chaque seconde
             _retryInfoAfter = DateTime.Now.AddSeconds(30);
         }
@@ -455,6 +456,11 @@ public sealed class AppController : IDisposable
                 try { StartupManager.Set(Vm.StartWithWindows); }
                 catch (Exception ex) { Log.Error("Lancement avec Windows", ex); }
                 break;
+            case nameof(MainViewModel.Language):
+                Settings.Language = Vm.Language;
+                Settings.Save();
+                Vm.NeedsRestart = L.Detect(Vm.Language) != L.IsFrench;
+                break;
         }
     }
 
@@ -474,7 +480,7 @@ public sealed class AppController : IDisposable
         // Titre non reconnu mais un anime très ressemblant existe : on demande, une seule fois par série.
         // (Une ressemblance vague reste dans l'historique sans déranger : c'est souvent une série non-anime.)
         if (Settings.Notifications && item.CanConfirm && item.SuggestedScore >= NotifyScore && _askedSeries.Add(item.ToParsed().SeriesKey))
-            Notification?.Invoke("AniSync a un doute", $"« {item.ParsedTitle} » : est-ce « {item.SuggestedTitle} » ? Clique pour valider.");
+            Notification?.Invoke(L.T("AniSync a un doute", "AniSync isn't sure"), L.T($"« {item.ParsedTitle} » : est-ce « {item.SuggestedTitle} » ? Clique pour valider.", $"\"{item.ParsedTitle}\": is it \"{item.SuggestedTitle}\"? Click to confirm."));
     }
 
     const double NotifyScore = 0.7;
@@ -509,7 +515,7 @@ public sealed class AppController : IDisposable
         Log.Info($"Connexion expirée : {service.Profile.Label}");
         RefreshAccountView();
         ReloadCurrentInfo();
-        Notification?.Invoke("AniSync", $"La connexion de {service.Profile.Label} a expiré : reconnecte-le depuis la fenêtre Comptes.");
+        Notification?.Invoke("AniSync", L.T($"La connexion de {service.Profile.Label} a expiré : reconnecte-le depuis la fenêtre Comptes.", $"{service.Profile.Label} was signed out: sign in again from the Accounts window."));
     }
 
     /// <summary>Met à jour le nom et l'avatar d'un compte (le compte actif par défaut) : ils ont pu changer sur le site.</summary>
@@ -563,15 +569,15 @@ public sealed class AppController : IDisposable
     {
         var last = _bridge.LastContact;
         if (!_bridge.IsRunning)
-            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = ("Indisponible (port 47814 occupé)", "#F2555A");
+            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = (L.T("Indisponible (port 47814 occupé)", "Unavailable (port 47814 in use)"), "#F2555A");
         else if (last is DateTime at && DateTime.UtcNow - at < TimeSpan.FromSeconds(30))
-            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = ($"Connectée · {_bridge.LastBrowser}", "#3DDC84");
+            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = (L.T($"Connectée · {_bridge.LastBrowser}", $"Connected · {_bridge.LastBrowser}"), "#3DDC84");
         else if (last is not null)
-            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = ($"Connectée ({_bridge.LastBrowser}) · aucune vidéo en ce moment", "#8FA3B8");
+            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = (L.T($"Connectée ({_bridge.LastBrowser}) · aucune vidéo en ce moment", $"Connected ({_bridge.LastBrowser}) · no video right now"), "#8FA3B8");
         else if (ExtensionInstaller.IsExtracted)
-            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = ("En attente : lance une vidéo dans le navigateur", "#8FA3B8");
+            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = (L.T("En attente : lance une vidéo dans le navigateur", "Waiting: play a video in your browser"), "#8FA3B8");
         else
-            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = ("Non installée", "#8FA3B8");
+            (Vm.ExtensionStatus, Vm.ExtensionStatusColor) = (L.T("Non installée", "Not installed"), "#8FA3B8");
     }
 
     public void Dispose()

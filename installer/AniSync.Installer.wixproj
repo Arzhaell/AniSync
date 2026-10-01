@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputName>AniSync-Setup</OutputName>
-    <Cultures>fr-FR</Cultures>
+    <Cultures>en-US;fr-FR</Cultures>
     <!-- Fournis par build.ps1 -->
     <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
     <AppExe Condition="'$(AppExe)' == ''">..\dist\publish\AniSync.exe</AppExe>
@@ -20,9 +20,11 @@
   <!-- Liste explicite : le Setup.exe (bundle\) est un projet séparé, construit à partir de ce .msi -->
   <PropertyGroup>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Package.wxs" />
+    <EmbeddedResource Include="Package.*.wxl" />
   </ItemGroup>
 
 </Project>

@@ -66,7 +66,7 @@ public sealed class HistoryItem : ObservableObject
         (Time.Date == DateTime.Today ? Time.ToString("HH:mm") : Time.ToString("dd/MM HH:mm")) +
         (ProfileName is not null ? $" · {ProfileName}"
             : Service == ListSites.AniList || MediaId is null ? "" : $" · {Service}");
-    [JsonIgnore] public string DisplayMessage => Undone ? $"{Message} · annulé" : Message;
+    [JsonIgnore] public string DisplayMessage => Undone ? $"{Message} · {L.T("annulé", "undone")}" : Message;
 
     [JsonIgnore]
     public string Glyph => Undone ? "" : Kind switch
@@ -113,6 +113,8 @@ public sealed class HistoryItem : ObservableObject
         Episode = p.Episode,
     };
 
+    static string Watched(ParsedEpisode p, string what) => L.T($"Épisode {p.Episode} vu · {what}", $"Episode {p.Episode} watched · {what}");
+
     static string Of(int episode, int? total) => total is int t ? $"{episode}/{t}" : $"{episode}";
 
     public static HistoryItem Applied(ParsedEpisode p, AniMedia media, int episode, SyncDecision decision,
@@ -126,10 +128,10 @@ public sealed class HistoryItem : ObservableObject
 
         string message = kind switch
         {
-            HistoryKind.Completed when prev is null => $"Ajouté et terminé · épisode {Of(episode, total)}",
-            HistoryKind.Completed => $"Épisode {prev.Progress} → {Of(episode, total)} · Terminé !",
-            HistoryKind.Added => $"Ajouté à ta liste · épisode {Of(episode, total)}",
-            _ => $"Épisode {prev!.Progress} → {Of(episode, total)}",
+            HistoryKind.Completed when prev is null => L.T($"Ajouté et terminé · épisode {Of(episode, total)}", $"Added and completed · episode {Of(episode, total)}"),
+            HistoryKind.Completed => L.T($"Épisode {prev.Progress} → {Of(episode, total)} · Terminé !", $"Episode {prev.Progress} → {Of(episode, total)} · Completed!"),
+            HistoryKind.Added => L.T($"Ajouté à ta liste · épisode {Of(episode, total)}", $"Added to your list · episode {Of(episode, total)}"),
+            _ => L.T($"Épisode {prev!.Progress} → {Of(episode, total)}", $"Episode {prev!.Progress} → {Of(episode, total)}"),
         };
 
         var item = From(p, kind, media.Title, message);
@@ -148,7 +150,7 @@ public sealed class HistoryItem : ObservableObject
 
     public static HistoryItem Skipped(ParsedEpisode p, AniMedia media, string reason, Profile? profile = null, string? pageUrl = null)
     {
-        var item = From(p, HistoryKind.Skipped, media.Title, $"Épisode {p.Episode} vu · {reason}");
+        var item = From(p, HistoryKind.Skipped, media.Title, Watched(p, reason));
         item.MediaId = media.Id;
         item.SiteUrl = pageUrl ?? media.SiteUrl;
         if (profile is not null) item.SetProfile(profile);
@@ -163,15 +165,15 @@ public sealed class HistoryItem : ObservableObject
     }
 
     public static HistoryItem Unrecognized(ParsedEpisode p, string? reason = null) =>
-        From(p, HistoryKind.Unrecognized, p.Title, reason ?? $"Épisode {p.Episode} vu · anime introuvable sur AniList");
+        From(p, HistoryKind.Unrecognized, p.Title, reason ?? Watched(p, L.T("anime introuvable sur AniList", "anime not found on AniList")));
 
     /// <summary>Titre non reconnu, mais un anime ressemblant est proposé à la validation.</summary>
     public static HistoryItem Unsure(ParsedEpisode p, Suggestion suggestion)
     {
         string question = suggestion.Score >= 0.7
-            ? $"est-ce « {suggestion.Media.Title} » ?"
-            : $"pas reconnu, peut-être « {suggestion.Media.Title} » ?";
-        var item = From(p, HistoryKind.Unrecognized, p.Title, $"Épisode {p.Episode} vu · {question}");
+            ? L.T($"est-ce «\u00A0{suggestion.Media.Title}\u00A0» ?", $"is it \"{suggestion.Media.Title}\"?")
+            : L.T($"pas reconnu, peut-être «\u00A0{suggestion.Media.Title}\u00A0» ?", $"not recognized, maybe \"{suggestion.Media.Title}\"?");
+        var item = From(p, HistoryKind.Unrecognized, p.Title, Watched(p, question));
         item.SuggestedId = suggestion.Media.Id;
         item.SuggestedTitle = suggestion.Media.Title;
         item.SuggestedScore = suggestion.Score;
@@ -179,10 +181,10 @@ public sealed class HistoryItem : ObservableObject
     }
 
     public static HistoryItem Pending(ParsedEpisode p, string reason) =>
-        From(p, HistoryKind.Pending, p.Title, $"Épisode {p.Episode} vu · {reason}");
+        From(p, HistoryKind.Pending, p.Title, Watched(p, reason));
 
     public static HistoryItem Error(ParsedEpisode p, string reason) =>
-        From(p, HistoryKind.Error, p.Title, $"Épisode {p.Episode} vu · {reason}");
+        From(p, HistoryKind.Error, p.Title, Watched(p, reason));
 }
 
 public static class HistoryStore

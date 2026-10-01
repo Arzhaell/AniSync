@@ -14,6 +14,9 @@ public sealed class AppSettings
 
     public bool Notifications { get; set; } = true;
 
+    /// <summary>Langue de l'interface : « auto » (langue de Windows), « fr » ou « en ».</summary>
+    public string Language { get; set; } = L.AutoCode;
+
     /// <summary>Comptes de liste (AniList / MyAnimeList), autant qu'on veut.</summary>
     public List<Profile> Profiles { get; set; } = new();
 

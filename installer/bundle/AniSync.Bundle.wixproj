@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Bundle</OutputType>
+    <!-- Les .wxl du thème sont des fichiers embarqués (Payload), pas des traductions du bundle -->
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
     <OutputName>AniSync-Setup</OutputName>
     <!-- Fournis par build.ps1 -->
     <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
-    <MsiPath Condition="'$(MsiPath)' == ''">..\..\dist\AniSync-Setup-$(ProductVersion).msi</MsiPath>
+    <MsiPath Condition="'$(MsiPath)' == ''">..\..\dist\AniSync-Setup-$(ProductVersion)-en.msi</MsiPath>
     <DefineConstants>ProductVersion=$(ProductVersion);MsiPath=$(MsiPath)</DefineConstants>
   </PropertyGroup>
 
