@@ -1,0 +1,28 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <PropertyGroup>
+    <OutputName>AniSync-Setup</OutputName>
+    <Cultures>fr-FR</Cultures>
+    <!-- Fournis par build.ps1 -->
+    <ProductVersion Condition="'$(ProductVersion)' == ''">1.0.0</ProductVersion>
+    <AppExe Condition="'$(AppExe)' == ''">..\dist\publish\AniSync.exe</AppExe>
+    <DefineConstants>ProductVersion=$(ProductVersion);AppExe=$(AppExe)</DefineConstants>
+    <!-- ICE61 : réinstaller la même version est voulu (mise à jour pendant les tests).
+         ICE69 : les raccourcis visent l'exe d'un autre composant de la même fonctionnalité, sans risque.
+         ICE91 : installation par utilisateur uniquement, donc pas de copie par profil à prévoir. -->
+    <SuppressIces>ICE61;ICE69;ICE91</SuppressIces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+  <!-- Liste explicite : le Setup.exe (bundle\) est un projet séparé, construit à partir de ce .msi -->
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Package.wxs" />
+  </ItemGroup>
+
+</Project>

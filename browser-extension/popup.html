@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>AniSync</title>
+  <style>
+    body { margin: 0; width: 290px; background: #0b1622; color: #e6edf3; font: 13px "Segoe UI", sans-serif; }
+    header { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; }
+    header img { width: 28px; height: 28px; }
+    header b { font-size: 15px; }
+    .card { margin: 0 12px 12px; padding: 12px; background: #152232; border: 1px solid #22324a; border-radius: 10px; }
+    .row { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #8fa3b8; flex: none; }
+    .ok { background: #3ddc84; } .warn { background: #f5a524; } .err { background: #f2555a; }
+    .muted { color: #8fa3b8; }
+    .title { font-weight: 600; margin-top: 2px; }
+    .accent { color: #3db4f2; }
+  </style>
+</head>
+<body>
+  <header><img src="icons/icon48.png" alt=""><b>AniSync</b></header>
+  <div class="card"><div class="row"><span id="dot" class="dot"></span><span id="app">Vérification…</span></div></div>
+  <div class="card">
+    <div class="muted">Dans cet onglet</div>
+    <div id="tab" class="title">…</div>
+    <div id="tabDetail" class="accent"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

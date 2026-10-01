@@ -1,0 +1,97 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <!-- Installation pour l'utilisateur courant, sans droits administrateur, dans %LOCALAPPDATA%\Programs\AniSync -->
+  <Package Name="AniSync"
+           Manufacturer="AniSync"
+           Version="$(ProductVersion)"
+           UpgradeCode="177D1D5C-8CC9-4E00-94A3-78A84C2D0606"
+           Scope="perUser"
+           Language="1036"
+           Codepage="1252"
+           Compressed="yes">
+
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="Une version plus récente d'AniSync est déjà installée." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="AniSyncIcon" SourceFile="..\src\AniSync\Assets\AniSync.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AniSyncIcon" />
+    <Property Id="ARPNOREPAIR" Value="1" />
+    <Property Id="ARPCOMMENTS" Value="Met à jour ta liste AniList ou MyAnimeList automatiquement quand tu termines un épisode." />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="AniSync" />
+      </Directory>
+    </StandardDirectory>
+
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="MainExecutable" Guid="C929D7E8-F908-4521-B3D5-6B4A2AA320E0">
+        <File Id="AniSyncExe" Source="$(AppExe)" KeyPath="no" />
+        <RegistryValue Root="HKCU" Key="Software\AniSync" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+        <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
+        <RemoveFolder Id="RemoveProgramsFolder" Directory="ProgramsFolder" On="uninstall" />
+      </Component>
+    </DirectoryRef>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="StartMenuShortcut" Guid="C13BC1F4-BE5B-4810-9BC5-92B7929D19B9">
+        <Shortcut Id="StartMenuShortcut" Name="AniSync" Description="Synchro automatique AniList"
+                  Target="[#AniSyncExe]" WorkingDirectory="INSTALLFOLDER" />
+        <RegistryValue Root="HKCU" Key="Software\AniSync" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="5BDA2AFE-10FC-42FA-9B41-9BB4542A5503">
+        <Shortcut Id="DesktopShortcut" Name="AniSync" Description="Synchro automatique AniList"
+                  Target="[#AniSyncExe]" WorkingDirectory="INSTALLFOLDER" />
+        <RegistryValue Root="HKCU" Key="Software\AniSync" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <!-- Lancement avec Windows : activé à l'installation, conservé tel quel lors d'une mise à jour
+         (l'utilisateur a pu le désactiver dans l'appli), toujours retiré à la désinstallation. -->
+    <Property Id="AUTOSTART_ENABLED">
+      <DirectorySearch Id="FindStartupFolder" Path="[StartupFolder]" Depth="0">
+        <FileSearch Id="FindStartupShortcut" Name="AniSync.lnk" />
+      </DirectorySearch>
+    </Property>
+    <StandardDirectory Id="StartupFolder">
+      <Component Id="Autostart" Guid="B7555BA2-7B52-4DC6-B5D8-A6D062D08F01"
+                 Condition="NOT WIX_UPGRADE_DETECTED OR AUTOSTART_ENABLED">
+        <Shortcut Id="AutostartShortcut" Name="AniSync" Description="AniSync" Arguments="--minimized"
+                  Target="[#AniSyncExe]" WorkingDirectory="INSTALLFOLDER" />
+        <RegistryValue Root="HKCU" Key="Software\AniSync" Name="Autostart" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <Feature Id="Main" Title="AniSync">
+      <ComponentRef Id="MainExecutable" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+      <ComponentRef Id="Autostart" />
+    </Feature>
+
+    <!-- Ferme l'appli ouverte avant une mise à jour ou une désinstallation. -->
+    <CustomAction Id="CloseRunningApp" FileRef="AniSyncExe" ExeCommand="--quit" Execute="immediate" Return="ignore" />
+    <CustomAction Id="LaunchApplication" FileRef="AniSyncExe" ExeCommand="" Execute="immediate" Impersonate="yes" Return="asyncNoWait" />
+
+    <InstallExecuteSequence>
+      <Custom Action="CloseRunningApp" Before="InstallValidate" Condition="WIX_UPGRADE_DETECTED OR REMOVE~=&quot;ALL&quot;" />
+    </InstallExecuteSequence>
+
+    <!-- Interface : un écran d'accueil + « Lancer AniSync » coché à la fin -->
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+    <WixVariable Id="WixUIDialogBmp" Value="Assets\Dialog.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="Assets\Banner.bmp" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Lancer AniSync" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+    <UI>
+      <ui:WixUI Id="WixUI_Minimal" />
+      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed" />
+    </UI>
+  </Package>
+</Wix>

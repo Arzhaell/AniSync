@@ -1,0 +1,32 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:bal="http://wixtoolset.org/schemas/v4/wxs/bal">
+
+  <!-- AniSync-Setup.exe : emballe le .msi dans un installeur .exe avec une interface aux couleurs d'AniSync.
+       Le .msi étant par utilisateur, le Setup.exe ne demande pas non plus de droits administrateur. -->
+  <Bundle Name="AniSync"
+          Manufacturer="AniSync"
+          Version="$(ProductVersion)"
+          UpgradeCode="88E0F18E-F291-455F-8F7C-520668A08C79"
+          IconSourceFile="..\..\src\AniSync\Assets\AniSync.ico"
+          DisableModify="yes">
+
+    <BootstrapperApplication>
+      <bal:WixStandardBootstrapperApplication Theme="rtfLicense"
+                                              LicenseFile="..\License.rtf"
+                                              ThemeFile="Theme\AniSyncTheme.xml"
+                                              LocalizationFile="Theme\AniSyncTheme.wxl"
+                                              SuppressOptionsUI="yes"
+                                              SuppressRepair="yes"
+                                              ShowVersion="yes" />
+      <Payload SourceFile="Theme\sidebar.png" Name="sidebar.png" />
+      <Payload SourceFile="..\..\src\AniSync\Assets\AniSync.ico" Name="AniSync.ico" />
+    </BootstrapperApplication>
+
+    <!-- Bouton « Lancer AniSync » sur l'écran final -->
+    <Variable Name="LaunchTarget" Value="[LocalAppDataFolder]Programs\AniSync\AniSync.exe" />
+
+    <Chain>
+      <MsiPackage Id="AniSyncMsi" SourceFile="$(MsiPath)" Compressed="yes" Visible="no" />
+    </Chain>
+  </Bundle>
+</Wix>

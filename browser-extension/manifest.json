@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "AniSync",
+  "version": "1.2.0",
+  "description": "Indique à l'appli AniSync (sur ce PC) l'anime et l'épisode que tu regardes dans le navigateur, pour mettre ta liste AniList ou MyAnimeList à jour.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "all_frames": true,
+      "match_about_blank": true,
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": ["http://localhost:47814/*"],
+  "action": {
+    "default_title": "AniSync",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  }
+}

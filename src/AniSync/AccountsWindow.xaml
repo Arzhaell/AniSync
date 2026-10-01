@@ -1,0 +1,104 @@
+<Window x:Class="AniSync.AccountsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Comptes" Icon="Assets/AniSync.ico"
+        Width="480" SizeToContent="Height" MaxHeight="720" ResizeMode="NoResize" ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BgBrush}" Foreground="{StaticResource TextBrush}"
+        FontFamily="Segoe UI" FontSize="13" UseLayoutRounding="True">
+
+    <Grid Margin="22,20,22,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Comptes" FontSize="18" FontWeight="SemiBold"/>
+            <TextBlock Style="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,6,0,14"
+                       Text="Le compte actif est celui mis à jour quand tu finis un épisode. Tu peux en avoir autant que tu veux, sur AniList comme sur MyAnimeList."/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <TextBlock x:Name="EmptyText" Style="{StaticResource Muted}" Margin="2,4,0,8" TextWrapping="Wrap"
+                       Text="Aucun compte pour l'instant : ajoutes-en un ci-dessous."/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,-8,0" Padding="0,0,8,0">
+                <ItemsControl x:Name="AccountList">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource Card}" Padding="12,10" Margin="0,0,0,8" BorderBrush="{Binding BorderColor}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Avatar + nom : ouvre la page du profil sur le site -->
+                                    <Button Grid.ColumnSpan="2" HorizontalAlignment="Left" Style="{StaticResource GhostButton}" Padding="0"
+                                            HorizontalContentAlignment="Left" Tag="{Binding}" Click="OpenProfile_Click"
+                                            ToolTip="Ouvrir le profil sur le site" Margin="0,0,8,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Grid Width="38" Height="38" VerticalAlignment="Center">
+                                                <Ellipse Fill="{StaticResource SubtleBrush}"/>
+                                                <Ellipse>
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding Avatar}" Stretch="UniformToFill"/>
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                            </Grid>
+                                            <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                                           Foreground="{StaticResource TextBrush}" MaxWidth="190"/>
+                                                <TextBlock Margin="0,2,0,0" FontSize="12">
+                                                    <Run Text="{Binding Site, Mode=OneWay}" Foreground="{StaticResource MutedBrush}"/>
+                                                    <Run Text=" · " Foreground="{StaticResource MutedBrush}"/>
+                                                    <Run Text="{Binding Status, Mode=OneWay}" Foreground="{Binding StatusColor, Mode=OneWay}"/>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Button>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource AccentButton}" Content="Utiliser" Tag="{Binding}" Click="Use_Click"
+                                                Visibility="{Binding CanUse, Converter={StaticResource BoolToVis}}"
+                                                ToolTip="Mettre à jour ce compte quand tu finis un épisode"/>
+                                        <Button Style="{StaticResource AccentButton}" Content="Reconnecter" Tag="{Binding}" Click="Reconnect_Click"
+                                                Visibility="{Binding NeedsReconnect, Converter={StaticResource BoolToVis}}"/>
+                                        <Button Style="{StaticResource GhostButton}" Tag="{Binding}" Click="Remove_Click" Margin="4,0,0,0"
+                                                ToolTip="Retirer ce compte d'AniSync" AutomationProperties.Name="Retirer">
+                                            <TextBlock Text="&#xE74D;" Style="{StaticResource Icon}" FontSize="13"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="0,6,0,0" Padding="14,12">
+            <Grid>
+                <TextBlock Text="Ajouter un compte" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource BaseButton}" Click="AddAniList_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE710;" Style="{StaticResource Icon}" FontSize="11" Margin="0,0,6,0"/>
+                            <TextBlock Text="AniList"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource BaseButton}" Click="AddMal_Click" Margin="8,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE710;" Style="{StaticResource Icon}" FontSize="11" Margin="0,0,6,0"/>
+                            <TextBlock Text="MyAnimeList"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Button Grid.Row="3" HorizontalAlignment="Right" Style="{StaticResource GhostButton}" Content="Fermer" Margin="0,14,0,0"
+                IsCancel="True" Click="Close_Click"/>
+    </Grid>
+</Window>

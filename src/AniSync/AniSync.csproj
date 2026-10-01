@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>AniSync</RootNamespace>
+    <AssemblyName>AniSync</AssemblyName>
+    <ApplicationIcon>Assets\AniSync.ico</ApplicationIcon>
+    <Version>1.6.0</Version>
+    <Product>AniSync</Product>
+    <AssemblyTitle>AniSync - synchro AniList et MyAnimeList</AssemblyTitle>
+    <Description>Repère l'anime que tu regardes sur ton PC et met ta liste AniList ou MyAnimeList à jour quand tu as fini un épisode.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WPF et WinForms ensemble : on évite les conflits de noms (Application, Button, Color...) -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Using Include="System.Net.Http" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\AniSync.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- L'extension navigateur voyage dans l'exe ; « Installer l'extension » la dépose sur le disque. -->
+    <EmbeddedResource Include="..\..\browser-extension\**\*" LogicalName="BrowserExtension/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
+  </ItemGroup>
+
+</Project>
