@@ -1,7 +1,7 @@
 ﻿# Construit dans dist\ :
-#   AniSync-Setup-<version>.exe   installeur (recommandé)
-#   AniSync-Setup-<version>.msi   le même installeur au format Windows Installer
-#   Portable\AniSync.exe          version sans installation
+#   AniSync-Setup-<version>.exe      installeur (recommandé)
+#   AniSync-Setup-<version>.msi      le même installeur au format Windows Installer
+#   AniSync-Portable-<version>.exe   version sans installation
 # Usage : powershell -ExecutionPolicy Bypass -File build.ps1
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
@@ -41,8 +41,7 @@ dotnet build (Join-Path $root "installer\bundle\AniSync.Bundle.wixproj") -c Rele
 if ($LASTEXITCODE) { throw "Échec du Setup.exe." }
 Copy-Item (Join-Path $exeOut "AniSync-Setup.exe") (Join-Path $dist "AniSync-Setup-$version.exe")
 
-New-Item -ItemType Directory (Join-Path $dist "Portable") | Out-Null
-Copy-Item $appExe (Join-Path $dist "Portable\AniSync.exe")
+Copy-Item $appExe (Join-Path $dist "AniSync-Portable-$version.exe")
 Remove-Item $work -Recurse -Force
 
 Write-Host "`nTerminé :" -ForegroundColor Green

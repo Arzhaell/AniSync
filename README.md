@@ -8,7 +8,7 @@ Appli Windows qui repère l'anime que tu regardes sur ton PC et met ta liste **A
 
 - **`AniSync-Setup-<version>.exe`** (recommandé) : l'installeur, aux couleurs d'AniSync.
 - `AniSync-Setup-<version>.msi` : le même installeur au format Windows Installer, avec l'interface standard de Windows. Utile pour un déploiement ou une installation silencieuse (`msiexec /i AniSync-Setup-<version>.msi /qn`).
-- `Portable\AniSync.exe` : version sans installation, à lancer de n'importe où.
+- `AniSync-Portable-<version>.exe` : version sans installation, à lancer de n'importe où. Elle partage les réglages et les comptes avec la version installée (`%APPDATA%\AniSync`). Une seule des deux peut tourner à la fois.
 
 L'installeur (`.exe` ou `.msi`) :
 
