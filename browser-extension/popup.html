@@ -15,6 +15,11 @@
     .muted { color: #8fa3b8; }
     .title { font-weight: 600; margin-top: 2px; }
     .accent { color: #3db4f2; }
+    .hint { font-size: 12px; margin-top: 8px; }
+    .hidden { display: none; }
+    button { display: block; width: 100%; margin-top: 10px; padding: 8px; border: 0; border-radius: 8px;
+             background: #3db4f2; color: #0b1622; font: 600 13px "Segoe UI", sans-serif; cursor: pointer; }
+    button:hover { background: #63c4f5; }
   </style>
 </head>
 <body>
@@ -24,7 +29,12 @@
     <div class="muted" data-i18n="inThisTab"></div>
     <div id="tab" class="title">…</div>
     <div id="tabDetail" class="accent"></div>
+    <div id="site" class="hidden">
+      <div id="siteHint" class="muted hint"></div>
+      <button id="enable" data-i18n="enableHere"></button>
+    </div>
   </div>
+  <script src="sites.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

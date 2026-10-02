@@ -1,5 +1,5 @@
 {
-  "extDescription": { "message": "Tells the AniSync app (on this PC) which anime and episode you're watching in the browser, to keep your AniList or MyAnimeList list up to date." },
+  "extDescription": { "message": "Tells the AniSync app on your PC which anime episode you're watching, to keep your AniList or MyAnimeList list up to date." },
   "checking": { "message": "Checking…" },
   "inThisTab": { "message": "In this tab" },
   "connectedListening": { "message": "Connected to AniSync · listening on" },
@@ -7,8 +7,15 @@
   "appNotRunning": { "message": "AniSync isn't running on this PC" },
   "noVideo": { "message": "No video playing" },
   "videoDetected": { "message": "Video detected" },
-  "season": { "message": "Season $N$ · ", "placeholders": { "n": { "content": "$1" } } },
-  "episode": { "message": "Episode $N$", "placeholders": { "n": { "content": "$1" } } },
+  "season": { "message": "Season $N$ · ", "placeholders": {"n": {"content": "$1"}} },
+  "episode": { "message": "Episode $N$", "placeholders": {"n": {"content": "$1"}} },
   "paused": { "message": "Paused" },
-  "playing": { "message": "Playing" }
+  "playing": { "message": "Playing" },
+  "notActiveHere": { "message": "AniSync isn't active on this site" },
+  "enableHere": { "message": "Enable on this site" },
+  "enableHint": { "message": "AniSync only reads the streaming sites you allow. Your browser will ask for your permission." },
+  "enablePlayerHint": { "message": "This page's video player comes from another site. Allow it so AniSync can read the episode." },
+  "enableRefused": { "message": "Permission not granted: AniSync won't read this site." },
+  "enabledHere": { "message": "Enabled on this site" },
+  "enabledHint": { "message": "Start or resume the video." }
 }

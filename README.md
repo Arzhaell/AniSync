@@ -91,7 +91,9 @@ Crunchyroll shows neither the anime name nor the episode number in its tabs (onl
 
 It also works when the player is embedded in another page (iframe).
 
-- **Install**: in the app, Settings > Browser extension > **Install…**, then follow the steps (developer mode > "Load unpacked"). It works in Opera, Edge, Chrome and Brave.
+- **Sites**: Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE and Bilibili work right away. On any other streaming site, click the extension icon, then **Enable on this site**: the browser asks for your permission, for that site (and its embedded player) only. You can remove a site at any time in the extension's settings in the browser.
+- **Install**: in the app, Settings > Browser extension > **Install…**, then follow the steps (developer mode > "Load unpacked"). It works in Opera, Edge, Chrome and Brave. One-click install from the Chrome Web Store and Edge Add-ons is on its way.
+- **Privacy**: see [PRIVACY.md](PRIVACY.md).
 - **Outside the browser**, nothing changes: AniSync keeps detecting video players and apps as before. When the extension is active in a browser, it's the reference for that browser.
 - Only the extension can talk to AniSync: requests without its `X-AniSync-Extension` header are refused, and a web page can't add it.
 
@@ -114,7 +116,8 @@ The version comes from `<Version>` in `src/AniSync/AniSync.csproj`: just bump it
 - `installer/`: WiX 5 `.msi` (`Package.wxs`), one per language (strings in `Package.en-US.wxl` and `Package.fr-FR.wxl`, licenses `License.en.rtf` and `License.fr.rtf`). WiX comes from NuGet, nothing to install.
 - `installer/bundle/`: the `Setup.exe` wrapping the English `.msi`, with its theme and strings in `Theme/` (`AniSyncTheme.wxl` in English, `AniSyncTheme.fr.wxl` for French Windows).
 
-- `browser-extension/`: the extension (Manifest V3), embedded in the exe, with its strings in `_locales/`
+- `browser-extension/`: the extension (Manifest V3), embedded in the exe, with its strings in `_locales/` and the site list in `manifest.json` (site logic: `sites.js`, tested by `tests/extension/`)
+- `store/`: everything for the extension stores (guide in French, listing texts, images); `build.ps1` also creates `dist\AniSync-Extension-<version>.zip`
 - `src/AniSync/Detection`: reading media sessions, windows and sound, receiving the extension's info (`BrowserBridge.cs`)
 - `src/AniSync/Core`: title parsing, watch time, sync rules, history
 - `src/AniSync/AniList`: GraphQL API, OAuth sign-in, anime lookup, French title translation (`WikidataTitles.cs`), AniList list (`AniListService.cs`)

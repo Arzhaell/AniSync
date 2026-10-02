@@ -91,7 +91,9 @@ Crunchyroll n'affiche ni le nom de l'anime ni le numéro d'épisode dans ses ong
 
 Elle fonctionne aussi quand le lecteur est intégré dans une autre page (iframe).
 
-- **Installation** : dans l'appli, Réglages > Extension navigateur > **Installer…**, puis suis les étapes (mode développeur > « Charger l'extension non empaquetée »). Elle marche dans Opera, Edge, Chrome et Brave.
+- **Sites** : Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE et Bilibili marchent tout de suite. Sur un autre site de streaming, clique sur l'icône de l'extension puis sur **Activer sur ce site** : le navigateur te demande ton accord, pour ce site (et son lecteur intégré) seulement. Tu peux retirer un site à tout moment dans les réglages de l'extension, dans le navigateur.
+- **Installation** : dans l'appli, Réglages > Extension navigateur > **Installer…**, puis suis les étapes (mode développeur > « Charger l'extension non empaquetée »). Elle marche dans Opera, Edge, Chrome et Brave. L'installation en un clic depuis le Chrome Web Store et Edge Add-ons arrive bientôt.
+- **Confidentialité** : voir [PRIVACY.md](PRIVACY.md#politique-de-confidentialité-danisync).
 - **Hors navigateur**, rien ne change : AniSync continue de détecter les lecteurs vidéo et les applis comme avant. Quand l'extension est active dans un navigateur, c'est elle qui fait foi pour ce navigateur.
 - Seule l'extension peut parler à AniSync : les requêtes sans son en-tête `X-AniSync-Extension` sont refusées, et une page web ne peut pas l'ajouter.
 
@@ -114,7 +116,8 @@ La version vient de `<Version>` dans `src/AniSync/AniSync.csproj` : il suffit de
 - `installer/`: `.msi` WiX 5 (`Package.wxs`), un par langue (textes dans `Package.fr-FR.wxl` et `Package.en-US.wxl`, licences `License.fr.rtf` et `License.en.rtf`). WiX est récupéré via NuGet, rien à installer.
 - `installer/bundle/`: le `Setup.exe` qui emballe le `.msi` anglais, avec le thème et ses textes dans `Theme/` (`AniSyncTheme.wxl` en anglais, `AniSyncTheme.fr.wxl` pour un Windows en français).
 
-- `browser-extension/`: l'extension (Manifest V3), embarquée dans l'exe, avec ses textes dans `_locales/`
+- `browser-extension/`: l'extension (Manifest V3), embarquée dans l'exe, avec ses textes dans `_locales/` et la liste des sites dans `manifest.json` (logique des sites : `sites.js`, testée par `tests/extension/`)
+- `store/`: tout ce qu'il faut pour les boutiques d'extensions (guide, textes, images) ; `build.ps1` crée aussi `dist\AniSync-Extension-<version>.zip`
 - `src/AniSync/Detection`: lecture des sessions média, des fenêtres et du son, réception des infos de l'extension (`BrowserBridge.cs`)
 - `src/AniSync/Core`: analyse des titres, temps de visionnage, règles de synchro, historique
 - `src/AniSync/AniList`: API GraphQL, connexion OAuth, recherche de l'anime, traduction des titres français (`WikidataTitles.cs`), liste AniList (`AniListService.cs`)

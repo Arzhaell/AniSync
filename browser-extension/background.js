@@ -72,3 +72,44 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => tabs.delete(tabId));
+
+// ---------- Sites activés à la main (bouton « Activer sur ce site ») ----------
+// Les sites de manifest.json sont lus d'office ; les autres le sont une fois que le navigateur a donné son accord.
+const EXTRA_SCRIPT = 'anisync-extra-sites';
+const manifest = chrome.runtime.getManifest();
+const BUILT_IN = new Set([...manifest.content_scripts.flatMap((c) => c.matches), ...manifest.host_permissions]);
+
+async function registerExtraSites() {
+  const { origins = [] } = await chrome.permissions.getAll();
+  const extra = origins.filter((origin) => !BUILT_IN.has(origin));
+  const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [EXTRA_SCRIPT] });
+  if (existing.length) await chrome.scripting.unregisterContentScripts({ ids: [EXTRA_SCRIPT] });
+  if (!extra.length) return;
+  await chrome.scripting.registerContentScripts([{
+    id: EXTRA_SCRIPT,
+    matches: extra,
+    js: ['content.js'],
+    allFrames: true,
+    runAt: 'document_idle',
+    persistAcrossSessions: true,
+  }]);
+}
+
+// Une seule mise à jour à la fois (plusieurs événements peuvent arriver ensemble).
+let syncing = Promise.resolve();
+function syncExtraSites() {
+  syncing = syncing.then(registerExtraSites).catch(() => {});
+  return syncing;
+}
+
+chrome.runtime.onInstalled.addListener(syncExtraSites);
+chrome.runtime.onStartup.addListener(syncExtraSites);
+chrome.permissions.onRemoved.addListener(syncExtraSites);
+chrome.permissions.onAdded.addListener(async ({ origins = [] }) => {
+  await syncExtraSites();
+  if (!origins.length) return;
+  // Les onglets déjà ouverts sur ces sites : pas besoin de recharger la page.
+  for (const tab of await chrome.tabs.query({ url: origins })) {
+    chrome.scripting.executeScript({ target: { tabId: tab.id, allFrames: true }, files: ['content.js'] }).catch(() => {});
+  }
+});

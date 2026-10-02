@@ -1,5 +1,5 @@
 {
-  "extDescription": { "message": "Indique à l'appli AniSync (sur ce PC) l'anime et l'épisode que tu regardes dans le navigateur, pour mettre ta liste AniList ou MyAnimeList à jour." },
+  "extDescription": { "message": "Indique à l'appli AniSync de ton PC l'épisode d'anime que tu regardes, pour tenir ta liste AniList ou MyAnimeList à jour." },
   "checking": { "message": "Vérification…" },
   "inThisTab": { "message": "Dans cet onglet" },
   "connectedListening": { "message": "Connecté à AniSync · écoute activée" },
@@ -7,8 +7,15 @@
   "appNotRunning": { "message": "AniSync n'est pas lancé sur ce PC" },
   "noVideo": { "message": "Aucune vidéo en cours" },
   "videoDetected": { "message": "Vidéo détectée" },
-  "season": { "message": "Saison $N$ · ", "placeholders": { "n": { "content": "$1" } } },
-  "episode": { "message": "Épisode $N$", "placeholders": { "n": { "content": "$1" } } },
+  "season": { "message": "Saison $N$ · ", "placeholders": {"n": {"content": "$1"}} },
+  "episode": { "message": "Épisode $N$", "placeholders": {"n": {"content": "$1"}} },
   "paused": { "message": "En pause" },
-  "playing": { "message": "En lecture" }
+  "playing": { "message": "En lecture" },
+  "notActiveHere": { "message": "AniSync n'est pas actif sur ce site" },
+  "enableHere": { "message": "Activer sur ce site" },
+  "enableHint": { "message": "AniSync ne lit que les sites de streaming que tu autorises. Le navigateur va te demander ton accord." },
+  "enablePlayerHint": { "message": "Le lecteur vidéo de cette page vient d'un autre site. Autorise-le pour qu'AniSync lise l'épisode." },
+  "enableRefused": { "message": "Autorisation refusée : AniSync ne lira pas ce site." },
+  "enabledHere": { "message": "Activé sur ce site" },
+  "enabledHint": { "message": "Lance ou reprends la vidéo." }
 }

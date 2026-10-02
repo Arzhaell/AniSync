@@ -3,6 +3,7 @@
 #   AniSync-Setup-<version>-en.msi   le même installeur au format Windows Installer, en anglais
 #   AniSync-Setup-<version>-fr.msi   ... et en français
 #   AniSync-Portable-<version>.exe   version sans installation
+#   AniSync-Extension-<version>.zip  l'extension navigateur, à envoyer au Chrome Web Store et à Edge Add-ons
 # Usage : powershell -ExecutionPolicy Bypass -File build.ps1
 $ErrorActionPreference = "Stop"
 $root = $PSScriptRoot
@@ -16,6 +17,13 @@ Write-Host "== AniSync $version ==" -ForegroundColor Cyan
 Write-Host "`n[1/4] Tests" -ForegroundColor Cyan
 dotnet test (Join-Path $root "AniSync.slnx") -c Release --nologo -v q
 if ($LASTEXITCODE) { throw "Des tests échouent : build annulé." }
+# Extension navigateur : tests de la logique des sites (Node.js)
+if (Get-Command node -ErrorAction SilentlyContinue) {
+    node --test (Get-ChildItem (Join-Path $root "tests\extension") -Filter *.test.js).FullName
+    if ($LASTEXITCODE) { throw "Des tests de l'extension échouent : build annulé." }
+} else {
+    Write-Host "Node.js absent : tests de l'extension non lancés." -ForegroundColor Yellow
+}
 
 Write-Host "`n[2/4] Exécutable autonome" -ForegroundColor Cyan
 # On vide dist\ sans supprimer le dossier (il peut être ouvert dans l'Explorateur).
@@ -49,6 +57,20 @@ Copy-Item (Join-Path $exeOut "AniSync-Setup.exe") (Join-Path $dist "AniSync-Setu
 
 Copy-Item $appExe (Join-Path $dist "AniSync-Portable-$version.exe")
 Remove-Item $work -Recurse -Force
+
+# Extension à envoyer au Chrome Web Store et à Edge Add-ons (manifest.json à la racine du .zip).
+$extDir = Join-Path $root "browser-extension"
+$extVersion = (Get-Content (Join-Path $extDir "manifest.json") -Raw -Encoding UTF8 | ConvertFrom-Json).version
+Add-Type -AssemblyName System.IO.Compression, System.IO.Compression.FileSystem
+$zip = [IO.Compression.ZipFile]::Open((Join-Path $dist "AniSync-Extension-$extVersion.zip"), "Create")
+try {
+    foreach ($file in Get-ChildItem $extDir -Recurse -File) {
+        $entry = $file.FullName.Substring($extDir.Length + 1).Replace('\', '/')
+        [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $file.FullName, $entry, "Optimal")
+    }
+} finally {
+    $zip.Dispose()
+}
 
 Write-Host "`nTerminé :" -ForegroundColor Green
 Get-ChildItem $dist -Recurse -File | ForEach-Object {
