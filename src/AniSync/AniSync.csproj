@@ -11,7 +11,7 @@
     <RootNamespace>AniSync</RootNamespace>
     <AssemblyName>AniSync</AssemblyName>
     <ApplicationIcon>Assets\AniSync.ico</ApplicationIcon>
-    <Version>1.7.0</Version>
+    <Version>1.8.0</Version>
     <Product>AniSync</Product>
     <AssemblyTitle>AniSync - AniList &amp; MyAnimeList sync</AssemblyTitle>
     <Description>Spots the anime you watch on your PC and updates your AniList or MyAnimeList list when you finish an episode.</Description>
