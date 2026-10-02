@@ -29,6 +29,10 @@ test('les sites de streaming connus sont couverts, pas les autres', () => {
   assert.ok(!sites.isCovered('https://www.notcrunchyroll.com/watch', BUILT_IN));
   assert.ok(!sites.isCovered('https://crunchyroll.com.evil.example/watch', BUILT_IN));
   assert.ok(!sites.isCovered('https://www.anime-site.fr/episode/12', BUILT_IN));
+  // Retirés de la liste de base : à activer à la main si besoin.
+  for (const url of ['https://www.youtube.com/watch?v=abc', 'https://www.hidive.com/video/1', 'https://www.bilibili.tv/en/video/1']) {
+    assert.ok(!sites.isCovered(url, BUILT_IN), url);
+  }
 });
 
 test('une règle accordée couvre bien le site', () => {

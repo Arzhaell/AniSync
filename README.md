@@ -91,7 +91,7 @@ Crunchyroll shows neither the anime name nor the episode number in its tabs (onl
 
 It also works when the player is embedded in another page (iframe).
 
-- **Sites**: Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE and Bilibili work right away. On any other streaming site, click the extension icon, then **Enable on this site**: the browser asks for your permission, for that site (and its embedded player) only. You can remove a site at any time in the extension's settings in the browser.
+- **Sites**: Crunchyroll, ADN, Netflix, Prime Video and Disney+ work right away. On any other streaming site, click the extension icon, then **Enable on this site**: the browser asks for your permission, for that site (and its embedded player) only. You can remove a site at any time in the extension's settings in the browser.
 - **Install**: in the app, Settings > Browser extension > **Install…**, then follow the steps (developer mode > "Load unpacked"). It works in Opera, Edge, Chrome and Brave. One-click install from the Chrome Web Store and Edge Add-ons is on its way.
 - **Privacy**: see [PRIVACY.md](PRIVACY.md).
 - **Outside the browser**, nothing changes: AniSync keeps detecting video players and apps as before. When the extension is active in a browser, it's the reference for that browser.

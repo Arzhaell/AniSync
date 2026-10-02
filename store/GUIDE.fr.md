@@ -74,7 +74,7 @@ What it does
 • The app counts an episode after 20 minutes of actual playback (pauses excluded) and updates your list: progress only moves forward, missing anime are added, the last episode marks it as completed.
 
 Supported sites
-Crunchyroll, ADN (Anime Digital Network), Netflix, Prime Video, Disney+, YouTube, HIDIVE and Bilibili work right away. On any other streaming site, open the extension and click "Enable on this site": your browser asks for your permission, for that site only.
+Crunchyroll, ADN (Anime Digital Network), Netflix, Prime Video and Disney+ work right away. On any other streaming site, open the extension and click "Enable on this site": your browser asks for your permission, for that site only.
 
 Requirements
 • The free AniSync app for Windows 10/11: https://github.com/Arzhaell/AniSync/releases
@@ -96,7 +96,7 @@ Ce qu'elle fait
 • L'appli compte un épisode après 20 minutes de lecture réelle (pauses exclues) et met ta liste à jour : la progression ne fait qu'avancer, un anime absent est ajouté, le dernier épisode le passe en « Terminé ».
 
 Sites pris en charge
-Crunchyroll, ADN (Anime Digital Network), Netflix, Prime Video, Disney+, YouTube, HIDIVE et Bilibili marchent tout de suite. Sur un autre site de streaming, ouvre l'extension et clique sur « Activer sur ce site » : le navigateur te demande ton accord, pour ce site seulement.
+Crunchyroll, ADN (Anime Digital Network), Netflix, Prime Video et Disney+ marchent tout de suite. Sur un autre site de streaming, ouvre l'extension et clique sur « Activer sur ce site » : le navigateur te demande ton accord, pour ce site seulement.
 
 Il te faut
 • L'appli gratuite AniSync pour Windows 10/11 : https://github.com/Arzhaell/AniSync/releases
@@ -126,7 +126,7 @@ Registers the content script on the streaming sites the user enables with "Enabl
 
 **Host permissions / Autorisations d'hôte**
 ```
-Listed streaming sites (Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE, Bilibili): the content script reads the series title, season, episode number and play/pause state of the video.
+Listed streaming sites (Crunchyroll, ADN, Netflix, Prime Video, Disney+): the content script reads the series title, season, episode number and play/pause state of the video.
 http://localhost:47814: the extension sends what it reads only to the AniSync desktop app running on the same computer. No other server is contacted.
 Optional access to other sites: requested at runtime, for one site at a time, only when the user clicks "Enable on this site".
 ```

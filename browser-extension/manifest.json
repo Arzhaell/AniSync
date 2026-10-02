@@ -22,10 +22,7 @@
         "*://*.animationdigitalnetwork.fr/*",
         "*://*.netflix.com/*",
         "*://*.primevideo.com/*",
-        "*://*.disneyplus.com/*",
-        "*://*.youtube.com/*",
-        "*://*.hidive.com/*",
-        "*://*.bilibili.tv/*"
+        "*://*.disneyplus.com/*"
       ],
       "all_frames": true,
       "match_about_blank": true,

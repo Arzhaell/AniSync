@@ -8,7 +8,7 @@ This policy covers the AniSync browser extension and the AniSync app for Windows
 
 ## Browser extension
 
-**What it reads.** On the streaming sites in its list (Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE, Bilibili) and on the sites you enable yourself with "Enable on this site", the extension reads:
+**What it reads.** On the streaming sites in its list (Crunchyroll, ADN, Netflix, Prime Video, Disney+) and on the sites you enable yourself with "Enable on this site", the extension reads:
 
 - the series title, season and episode number shown on the page, the page title and the site name;
 - the state of the video: playing or paused, position and duration.
@@ -51,7 +51,7 @@ Cette politique couvre l'extension navigateur AniSync et l'appli AniSync pour Wi
 
 ## Extension navigateur
 
-**Ce qu'elle lit.** Sur les sites de streaming de sa liste (Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE, Bilibili) et sur les sites que tu actives toi-même avec « Activer sur ce site », l'extension lit :
+**Ce qu'elle lit.** Sur les sites de streaming de sa liste (Crunchyroll, ADN, Netflix, Prime Video, Disney+) et sur les sites que tu actives toi-même avec « Activer sur ce site », l'extension lit :
 
 - le titre de la série, la saison et le numéro d'épisode affichés sur la page, le titre de la page et le nom du site ;
 - l'état de la vidéo : lecture ou pause, position et durée.

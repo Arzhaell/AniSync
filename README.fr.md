@@ -91,7 +91,7 @@ Crunchyroll n'affiche ni le nom de l'anime ni le numéro d'épisode dans ses ong
 
 Elle fonctionne aussi quand le lecteur est intégré dans une autre page (iframe).
 
-- **Sites** : Crunchyroll, ADN, Netflix, Prime Video, Disney+, YouTube, HIDIVE et Bilibili marchent tout de suite. Sur un autre site de streaming, clique sur l'icône de l'extension puis sur **Activer sur ce site** : le navigateur te demande ton accord, pour ce site (et son lecteur intégré) seulement. Tu peux retirer un site à tout moment dans les réglages de l'extension, dans le navigateur.
+- **Sites** : Crunchyroll, ADN, Netflix, Prime Video et Disney+ marchent tout de suite. Sur un autre site de streaming, clique sur l'icône de l'extension puis sur **Activer sur ce site** : le navigateur te demande ton accord, pour ce site (et son lecteur intégré) seulement. Tu peux retirer un site à tout moment dans les réglages de l'extension, dans le navigateur.
 - **Installation** : dans l'appli, Réglages > Extension navigateur > **Installer…**, puis suis les étapes (mode développeur > « Charger l'extension non empaquetée »). Elle marche dans Opera, Edge, Chrome et Brave. L'installation en un clic depuis le Chrome Web Store et Edge Add-ons arrive bientôt.
 - **Confidentialité** : voir [PRIVACY.md](PRIVACY.md#politique-de-confidentialité-danisync).
 - **Hors navigateur**, rien ne change : AniSync continue de détecter les lecteurs vidéo et les applis comme avant. Quand l'extension est active dans un navigateur, c'est elle qui fait foi pour ce navigateur.
